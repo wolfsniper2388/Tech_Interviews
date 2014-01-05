@@ -1,0 +1,535 @@
+PEP: 3116
+Title: New I/O
+Version: $Revision$
+Last-Modified: $Date$
+Author: Daniel Stutzbach <daniel@stutzbachenterprises.com>,
+        Guido van Rossum <guido@python.org>,
+        Mike Verdone <mike.verdone@gmail.com>
+Status: Final
+Type: Standards Track
+Content-Type: text/x-rst
+Created: 26-Feb-2007
+Python-Version: 3.0
+Post-History: 26-Feb-2007
+
+Rationale and Goals
+===================
+
+Python allows for a variety of stream-like (a.k.a. file-like) objects
+that can be used via ``read()`` and ``write()`` calls.  Anything that
+provides ``read()`` and ``write()`` is stream-like.  However, more
+exotic and extremely useful functions like ``readline()`` or
+``seek()`` may or may not be available on every stream-like object.
+Python needs a specification for basic byte-based I/O streams to which
+we can add buffering and text-handling features.
+
+Once we have a defined raw byte-based I/O interface, we can add
+buffering and text handling layers on top of any byte-based I/O class.
+The same buffering and text handling logic can be used for files,
+sockets, byte arrays, or custom I/O classes developed by Python
+programmers.  Developing a standard definition of a stream lets us
+separate stream-based operations like ``read()`` and ``write()`` from
+implementation specific operations like ``fileno()`` and ``isatty()``.
+It encourages programmers to write code that uses streams as streams
+and not require that all streams support file-specific or
+socket-specific operations.
+
+The new I/O spec is intended to be similar to the Java I/O libraries,
+but generally less confusing.  Programmers who don't want to muck
+about in the new I/O world can expect that the ``open()`` factory
+method will produce an object backwards-compatible with old-style file
+objects.
+
+
+Specification
+=============
+
+The Python I/O Library will consist of three layers: a raw I/O layer,
+a buffered I/O layer, and a text I/O layer.  Each layer is defined by
+an abstract base class, which may have multiple implementations.  The
+raw I/O and buffered I/O layers deal with units of bytes, while the
+text I/O layer deals with units of characters.
+
+
+Raw I/O
+=======
+
+The abstract base class for raw I/O is RawIOBase.  It has several
+methods which are wrappers around the appropriate operating system
+calls.  If one of these functions would not make sense on the object,
+the implementation must raise an IOError exception.  For example, if a
+file is opened read-only, the ``.write()`` method will raise an
+``IOError``.  As another example, if the object represents a socket,
+then ``.seek()``, ``.tell()``, and ``.truncate()`` will raise an
+``IOError``.  Generally, a call to one of these functions maps to
+exactly one operating system call.
+
+    ``.read(n: int) -> bytes``
+
+       Read up to ``n`` bytes from the object and return them.  Fewer
+       than ``n`` bytes may be returned if the operating system call
+       returns fewer than ``n`` bytes.  If 0 bytes are returned, this
+       indicates end of file.  If the object is in non-blocking mode
+       and no bytes are available, the call returns ``None``.
+
+    ``.readinto(b: bytes) -> int``
+
+       Read up to ``len(b)`` bytes from the object and stores them in
+       ``b``, returning the number of bytes read.  Like .read, fewer
+       than ``len(b)`` bytes may be read, and 0 indicates end of file.
+       ``None`` is returned if a non-blocking object has no bytes
+       available.  The length of ``b`` is never changed.
+
+    ``.write(b: bytes) -> int``
+
+        Returns number of bytes written, which may be ``< len(b)``.
+
+    ``.seek(pos: int, whence: int = 0) -> int``
+
+    ``.tell() -> int``
+
+    ``.truncate(n: int = None) -> int``
+
+    ``.close() -> None``
+
+Additionally, it defines a few other methods:
+
+    ``.readable() -> bool``
+
+       Returns ``True`` if the object was opened for reading,
+       ``False`` otherwise.  If ``False``, ``.read()`` will raise an
+       ``IOError`` if called.
+
+    ``.writable() -> bool``
+
+       Returns ``True`` if the object was opened for writing,
+       ``False`` otherwise.  If ``False``, ``.write()`` and
+       ``.truncate()`` will raise an ``IOError`` if called.
+
+    ``.seekable() -> bool``
+
+       Returns ``True`` if the object supports random access (such as
+       disk files), or ``False`` if the object only supports
+       sequential access (such as sockets, pipes, and ttys).  If
+       ``False``, ``.seek()``, ``.tell()``, and ``.truncate()`` will
+       raise an IOError if called.
+
+    ``.__enter__() -> ContextManager``
+
+       Context management protocol.  Returns ``self``.
+
+    ``.__exit__(...) -> None``
+
+       Context management protocol.  Same as ``.close()``.
+
+If and only if a ``RawIOBase`` implementation operates on an
+underlying file descriptor, it must additionally provide a
+``.fileno()`` member function.  This could be defined specifically by
+the implementation, or a mix-in class could be used (need to decide
+about this).
+
+    ``.fileno() -> int``
+
+       Returns the underlying file descriptor (an integer)
+
+Initially, three implementations will be provided that implement the
+``RawIOBase`` interface: ``FileIO``, ``SocketIO`` (in the socket
+module), and ``ByteIO``.  Each implementation must determine whether
+the object supports random access as the information provided by the
+user may not be sufficient (consider ``open("/dev/tty", "rw")`` or
+``open("/tmp/named-pipe", "rw")``).  As an example, ``FileIO`` can
+determine this by calling the ``seek()`` system call; if it returns an
+error, the object does not support random access.  Each implementation
+may provided additional methods appropriate to its type.  The
+``ByteIO`` object is analogous to Python 2's ``cStringIO`` library,
+but operating on the new bytes type instead of strings.
+
+
+Buffered I/O
+============
+
+The next layer is the Buffered I/O layer which provides more efficient
+access to file-like objects.  The abstract base class for all Buffered
+I/O implementations is ``BufferedIOBase``, which provides similar methods
+to RawIOBase:
+
+    ``.read(n: int = -1) -> bytes``
+
+       Returns the next ``n`` bytes from the object.  It may return
+       fewer than ``n`` bytes if end-of-file is reached or the object is
+       non-blocking.  0 bytes indicates end-of-file.  This method may
+       make multiple calls to ``RawIOBase.read()`` to gather the bytes,
+       or may make no calls to ``RawIOBase.read()`` if all of the needed
+       bytes are already buffered.
+
+    ``.readinto(b: bytes) -> int``
+
+    ``.write(b: bytes) -> int``
+
+       Write ``b`` bytes to the buffer.  The bytes are not guaranteed to
+       be written to the Raw I/O object immediately; they may be
+       buffered.  Returns ``len(b)``.
+
+    ``.seek(pos: int, whence: int = 0) -> int``
+
+    ``.tell() -> int``
+
+    ``.truncate(pos: int = None) -> int``
+
+    ``.flush() -> None``
+
+    ``.close() -> None``
+
+    ``.readable() -> bool``
+
+    ``.writable() -> bool``
+
+    ``.seekable() -> bool``
+
+    ``.__enter__() -> ContextManager``
+
+    ``.__exit__(...) -> None``
+
+Additionally, the abstract base class provides one member variable:
+
+    ``.raw``
+
+       A reference to the underlying ``RawIOBase`` object.
+
+The ``BufferedIOBase`` methods signatures are mostly identical to that
+of ``RawIOBase`` (exceptions: ``write()`` returns ``None``,
+``read()``'s argument is optional), but may have different semantics.
+In particular, ``BufferedIOBase`` implementations may read more data
+than requested or delay writing data using buffers.  For the most
+part, this will be transparent to the user (unless, for example, they
+open the same file through a different descriptor).  Also, raw reads
+may return a short read without any particular reason; buffered reads
+will only return a short read if EOF is reached; and raw writes may
+return a short count (even when non-blocking I/O is not enabled!),
+while buffered writes will raise ``IOError`` when not all bytes could
+be written or buffered.
+
+There are four implementations of the ``BufferedIOBase`` abstract base
+class, described below.
+
+
+``BufferedReader``
+------------------
+
+The ``BufferedReader`` implementation is for sequential-access
+read-only objects.  Its ``.flush()`` method is a no-op.
+
+
+``BufferedWriter``
+------------------
+
+The ``BufferedWriter`` implementation is for sequential-access
+write-only objects.  Its ``.flush()`` method forces all cached data to
+be written to the underlying RawIOBase object.
+
+
+``BufferedRWPair``
+------------------
+
+The ``BufferedRWPair`` implementation is for sequential-access
+read-write objects such as sockets and ttys.  As the read and write
+streams of these objects are completely independent, it could be
+implemented by simply incorporating a ``BufferedReader`` and
+``BufferedWriter`` instance.  It provides a ``.flush()`` method that
+has the same semantics as a ``BufferedWriter``'s ``.flush()`` method.
+
+
+``BufferedRandom``
+------------------
+
+The ``BufferedRandom`` implementation is for all random-access
+objects, whether they are read-only, write-only, or read-write.
+Compared to the previous classes that operate on sequential-access
+objects, the ``BufferedRandom`` class must contend with the user
+calling ``.seek()`` to reposition the stream.  Therefore, an instance
+of ``BufferedRandom`` must keep track of both the logical and true
+position within the object.  It provides a ``.flush()`` method that
+forces all cached write data to be written to the underlying
+``RawIOBase`` object and all cached read data to be forgotten (so that
+future reads are forced to go back to the disk).
+
+*Q: Do we want to mandate in the specification that switching between
+reading and writing on a read-write object implies a .flush()?  Or is
+that an implementation convenience that users should not rely on?*
+
+For a read-only ``BufferedRandom`` object, ``.writable()`` returns
+``False`` and the ``.write()`` and ``.truncate()`` methods throw
+``IOError``.
+
+For a write-only ``BufferedRandom`` object, ``.readable()`` returns
+``False`` and the ``.read()`` method throws ``IOError``.
+
+
+Text I/O
+========
+
+The text I/O layer provides functions to read and write strings from
+streams.  Some new features include universal newlines and character
+set encoding and decoding.  The Text I/O layer is defined by a
+``TextIOBase`` abstract base class.  It provides several methods that
+are similar to the ``BufferedIOBase`` methods, but operate on a
+per-character basis instead of a per-byte basis.  These methods are:
+
+    ``.read(n: int = -1) -> str``
+
+    ``.write(s: str) -> int``
+
+    ``.tell() -> object``
+
+        Return a cookie describing the current file position.
+        The only supported use for the cookie is with .seek()
+        with whence set to 0 (i.e. absolute seek).
+
+    ``.seek(pos: object, whence: int = 0) -> int``
+
+        Seek to position ``pos``.  If ``pos`` is non-zero, it must
+        be a cookie returned from ``.tell()`` and ``whence`` must be zero.
+
+    ``.truncate(pos: object = None) -> int``
+
+        Like ``BufferedIOBase.truncate()``, except that ``pos`` (if
+        not ``None``) must be a cookie previously returned by ``.tell()``.
+
+Unlike with raw I/O, the units for .seek() are not specified - some
+implementations (e.g. ``StringIO``) use characters and others
+(e.g. ``TextIOWrapper``) use bytes.  The special case for zero is to
+allow going to the start or end of a stream without a prior
+``.tell()``.  An implementation could include stream encoder state in
+the cookie returned from ``.tell()``.
+
+    
+``TextIOBase`` implementations also provide several methods that are
+pass-throughs to the underlaying ``BufferedIOBase`` objects:
+
+    ``.flush() -> None``
+
+    ``.close() -> None``
+
+    ``.readable() -> bool``
+
+    ``.writable() -> bool``
+
+    ``.seekable() -> bool``
+
+``TextIOBase`` class implementations additionally provide the
+following methods:
+
+    ``.readline() -> str``
+
+        Read until newline or EOF and return the line, or ``""`` if
+        EOF hit immediately.
+
+    ``.__iter__() -> Iterator``
+
+        Returns an iterator that returns lines from the file (which
+        happens to be ``self``).
+
+    ``.next() -> str``
+
+        Same as ``readline()`` except raises ``StopIteration`` if EOF
+        hit immediately.
+
+Two implementations will be provided by the Python library.  The
+primary implementation, ``TextIOWrapper``, wraps a Buffered I/O
+object.  Each ``TextIOWrapper`` object has a property named
+"``.buffer``" that provides a reference to the underlying
+``BufferedIOBase`` object.  Its initializer has the following
+signature:
+
+    ``.__init__(self, buffer, encoding=None, errors=None, newline=None, line_buffering=False)``
+
+        ``buffer`` is a reference to the ``BufferedIOBase`` object to
+        be wrapped with the ``TextIOWrapper``.
+
+        ``encoding`` refers to an encoding to be used for translating
+        between the byte-representation and character-representation.
+        If it is ``None``, then the system's locale setting will be
+        used as the default.
+
+        ``errors`` is an optional string indicating error handling.
+        It may be set whenever ``encoding`` may be set.  It defaults
+        to ``'strict'``.
+
+        ``newline`` can be ``None``, ``''``, ``'\n'``, ``'\r'``, or
+        ``'\r\n'``; all other values are illegal.  It controls the
+        handling of line endings.  It works as follows:
+
+        * On input, if ``newline`` is ``None``, universal newlines
+          mode is enabled.  Lines in the input can end in ``'\n'``,
+          ``'\r'``, or ``'\r\n'``, and these are translated into
+          ``'\n'`` before being returned to the caller.  If it is
+          ``''``, universal newline mode is enabled, but line endings
+          are returned to the caller untranslated.  If it has any of
+          the other legal values, input lines are only terminated by
+          the given string, and the line ending is returned to the
+          caller untranslated.  (In other words, translation to
+          ``'\n'`` only occurs if ``newline`` is ``None``.)
+
+        * On output, if ``newline`` is ``None``, any ``'\n'``
+          characters written are translated to the system default
+          line separator, ``os.linesep``.  If ``newline`` is ``''``,
+          no translation takes place.  If ``newline`` is any of the
+          other legal values, any ``'\n'`` characters written are
+          translated to the given string.  (Note that the rules
+          guiding translation are different for output than for
+          input.)
+
+        ``line_buffering``, if True, causes ``write()`` calls to imply
+        a ``flush()`` if the string written contains at least one
+        ``'\n'`` or ``'\r'`` character.  This is set by ``open()``
+        when it detects that the underlying stream is a TTY device,
+        or when a ``buffering`` argument of ``1`` is passed.
+
+        Further notes on the ``newline`` parameter:
+
+        * ``'\r'`` support is still needed for some OSX applications
+          that produce files using ``'\r'`` line endings; Excel (when
+          exporting to text) and Adobe Illustrator EPS files are the
+          most common examples.
+
+        * If translation is enabled, it happens regardless of which
+          method is called for reading or writing.  For example,
+          ``f.read()`` will always produce the same result as
+          ``''.join(f.readlines())``.
+
+        * If universal newlines without translation are requested on
+          input (i.e. ``newline=''``), if a system read operation
+          returns a buffer ending in ``'\r'``, another system read
+          operation is done to determine whether it is followed by
+          ``'\n'`` or not.  In universal newlines mode with
+          translation, the second system read operation may be
+          postponed until the next read request, and if the following
+          system read operation returns a buffer starting with
+          ``'\n'``, that character is simply discarded.
+
+Another implementation, ``StringIO``, creates a file-like ``TextIO``
+implementation without an underlying Buffered I/O object.  While
+similar functionality could be provided by wrapping a ``BytesIO``
+object in a ``TextIOWrapper``, the ``StringIO`` object allows for much
+greater efficiency as it does not need to actually performing encoding
+and decoding.  A String I/O object can just store the encoded string
+as-is.  The ``StringIO`` object's ``__init__`` signature takes an
+optional string specifying the initial value; the initial position is
+always 0.  It does not support encodings or newline translations; you
+always read back exactly the characters you wrote.
+
+
+Unicode encoding/decoding Issues
+--------------------------------
+
+We should allow allow changing the encoding and error-handling
+setting later.  The behavior of Text I/O operations in the face of
+Unicode problems and ambiguities (e.g. diacritics, surrogates, invalid
+bytes in an encoding) should be the same as that of the unicode
+``encode()``/``decode()`` methods.  ``UnicodeError`` may be raised.
+
+Implementation note: we should be able to reuse much of the
+infrastructure provided by the ``codecs`` module.  If it doesn't
+provide the exact APIs we need, we should refactor it to avoid
+reinventing the wheel.
+
+
+Non-blocking I/O
+================
+
+Non-blocking I/O is fully supported on the Raw I/O level only.  If a
+raw object is in non-blocking mode and an operation would block, then
+``.read()`` and ``.readinto()`` return ``None``, while ``.write()``
+returns 0.  In order to put an object in non-blocking mode,
+the user must extract the fileno and do it by hand.
+
+At the Buffered I/O and Text I/O layers, if a read or write fails due
+a non-blocking condition, they raise an ``IOError`` with ``errno`` set
+to ``EAGAIN``.
+
+Originally, we considered propagating up the Raw I/O behavior, but
+many corner cases and problems were raised.  To address these issues,
+significant changes would need to have been made to the Buffered I/O
+and Text I/O layers.  For example, what should ``.flush()`` do on a
+Buffered non-blocking object?  How would the user instruct the object
+to "Write as much as you can from your buffer, but don't block"?  A
+non-blocking ``.flush()`` that doesn't necessarily flush all available
+data is counter-intuitive.  Since non-blocking and blocking objects
+would have such different semantics at these layers, it was agreed to
+abandon efforts to combine them into a single type.
+
+
+The ``open()`` Built-in Function
+================================
+
+The ``open()`` built-in function is specified by the following
+pseudo-code::
+
+    def open(filename, mode="r", buffering=None, *, 
+             encoding=None, errors=None, newline=None):
+        assert isinstance(filename, (str, int))
+        assert isinstance(mode, str)
+        assert buffering is None or isinstance(buffering, int)
+        assert encoding is None or isinstance(encoding, str)
+        assert newline in (None, "", "\n", "\r", "\r\n")
+        modes = set(mode)
+        if modes - set("arwb+t") or len(mode) > len(modes):
+            raise ValueError("invalid mode: %r" % mode)
+        reading = "r" in modes
+        writing = "w" in modes
+        binary = "b" in modes
+        appending = "a" in modes
+        updating = "+" in modes
+        text = "t" in modes or not binary
+        if text and binary:
+            raise ValueError("can't have text and binary mode at once")
+        if reading + writing + appending > 1:
+            raise ValueError("can't have read/write/append mode at once")
+        if not (reading or writing or appending):
+            raise ValueError("must have exactly one of read/write/append mode")
+        if binary and encoding is not None:
+            raise ValueError("binary modes doesn't take an encoding arg")
+        if binary and errors is not None:
+            raise ValueError("binary modes doesn't take an errors arg")
+        if binary and newline is not None:
+            raise ValueError("binary modes doesn't take a newline arg")
+        # XXX Need to spec the signature for FileIO()
+        raw = FileIO(filename, mode)
+        line_buffering = (buffering == 1 or buffering is None and raw.isatty())
+        if line_buffering or buffering is None:
+            buffering = 8*1024  # International standard buffer size
+            # XXX Try setting it to fstat().st_blksize
+        if buffering < 0:
+            raise ValueError("invalid buffering size")
+        if buffering == 0:
+            if binary:
+                return raw
+            raise ValueError("can't have unbuffered text I/O")
+        if updating:
+            buffer = BufferedRandom(raw, buffering)
+        elif writing or appending:
+            buffer = BufferedWriter(raw, buffering)
+        else:
+            assert reading
+            buffer = BufferedReader(raw, buffering)
+        if binary:
+            return buffer
+        assert text
+        return TextIOWrapper(buffer, encoding, errors, newline, line_buffering)
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:

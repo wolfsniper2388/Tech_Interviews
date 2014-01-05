@@ -1,0 +1,13 @@
+188           0 LOAD_FAST                0 (x)
+              3 LOAD_CONST               1 (3)
+              6 COMPARE_OP               2 (==)
+              9 POP_JUMP_IF_FALSE       21
+
+189          12 LOAD_CONST               2 (5)
+             15 STORE_FAST               0 (x)
+             18 JUMP_FORWARD             0 (to 21)
+
+190     >>   21 LOAD_FAST                0 (x)
+             24 LOAD_FAST                0 (x)
+             27 BINARY_MULTIPLY     
+             28 RETURN_VALUE        

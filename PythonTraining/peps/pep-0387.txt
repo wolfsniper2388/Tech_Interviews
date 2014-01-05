@@ -1,0 +1,132 @@
+PEP: 387
+Title: Backwards Compatibility Policy
+Version: $Revision$
+Last-Modified: $Date$
+Author: Benjamin Peterson <benjamin@python.org>
+Status: Draft
+Type: Process
+Content-Type: text/x-rst
+Created: 18-Jun-2009
+
+
+Abstract
+========
+
+This PEP outlines Python's backwards compatibility policy.
+
+
+Rationale
+=========
+
+As one of the most used programming languages today [#tiobe]_, the Python core
+language and its standard library play a critcal role in thousands of
+applications and libraries.  This is fantastic; it is probably one of a language
+designer's most wishful dreams.  However, it means the development team must be
+very careful not to break this existing 3rd party code with new releases.
+
+
+Backwards Compatibility Rules
+=============================
+
+This policy applies to all public APIs.  These include:
+
+- Syntax and behavior of these constructs as defined by the reference
+  manual
+
+- The C-API
+
+- Function, class, module, attribute, and method names and types.
+
+- Given a set of arguments, the return value, side effects, and raised
+  exceptions of a function.  This does not preclude changes from
+  reasonable bug fixes.
+
+- The position and expected types of arguments and returned values.
+
+- Behavior of classes with regards to subclasses: the conditions under
+  which overridden methods are called.
+
+Others are explicity not part of the public API.  They can change or
+be removed at any time in any way.  These include:
+
+- Function, class, module, attribute, method, and C-API names and types that
+  are prefixed by "_" (except special names).  The contents of these
+  can also are not subject to the policy.
+
+- Inheritance patterns of internal classes.
+
+- Test suites.  (Anything in the Lib/test directory or test
+  subdirectories of packages.)
+
+This is the basic policy for backwards compatibility:
+
+* Unless it is going through the deprecation process below, the
+  behavior of an API *must* not change between any two consecutive
+  releases.
+
+* Similarly a feature cannot be removed without notice between any two
+  consecutive releases.
+
+* Addition of a feature which breaks 3rd party libraries or applications should
+  have a large benefit to breakage ratio, and/or the incompatibility should be
+  trival to fix in broken code.  For example, adding an stdlib module
+  with the same name as a third party package is not acceptable.
+  Adding a method or attribute that conflicts with 3rd party code
+  through inheritance, however, is likely reasonable.
+
+
+Making Incompatible Changes
+===========================
+
+It's a fact: design mistakes happen.  Thus it is important to be able to change
+APIs or remove misguided features.  This is accomplished through a gradual
+process over several releases:
+
+1. Discuss the change.  Depending on the size of the incompatibility, this could
+   be on the bug tracker, python-dev, python-list, or the appropriate SIG.  A
+   PEP or similar document may be written.  Hopefully users of the affected API
+   will pipe up to comment.
+
+2. Add a warning [#warnings]_.  If behavior is changing, the API may gain a
+   new function or method to perform the new behavior; old usage should raise
+   the warning.  If an API is being removed, simply warn whenever it is entered.
+   DeprecationWarning is the usual warning category to use, but
+   PendingDeprecationWarning may be used in special cases were the old and new
+   versions of the API will coexist for many releases.
+
+3. Wait for a release of whichever branch contains the warning.
+
+4. See if there's any feedback.  Users not involved in the original discussions
+   may comment now after seeing the warning.  Perhaps reconsider.
+
+5. The behavior change or feature removal may now be made default or permanent
+   in the next release.  Remove the old version and warning.
+
+
+References
+==========
+
+.. [#tiobe] TIOBE Programming Community Index
+
+   http://www.tiobe.com/index.php/content/paperinfo/tpci/index.html
+
+.. [#warnings] The warnings module
+
+   http://docs.python.org/library/warnings.html
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:

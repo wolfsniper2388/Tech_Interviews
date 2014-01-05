@@ -1,0 +1,77 @@
+PEP: 373
+Title: Python 2.7 Release Schedule
+Version: $Revision$
+Last-Modified: $Date$
+Author: Benjamin Peterson <benjamin@python.org>
+Status: Active
+Type: Informational
+Content-Type: text/x-rst
+Created: 3-Nov-2008
+Python-Version: 2.7
+
+
+Abstract
+========
+
+This document describes the development and release schedule for Python 2.7.
+The schedule primarily concerns itself with PEP-sized items.  Small features may
+be added up to and including the first beta release.  Bugs may be fixed until
+the final release.
+
+
+Release Manager and Crew
+========================
+
+============================ ==================
+Position                     Name
+============================ ==================
+2.7 Release Manager          Benjamin Peterson
+Windows installers           Martin v. Loewis
+Mac installers               Ronald Oussoren
+============================ ==================
+
+
+Release Schedule
+================
+
+The current schedule is:
+
+- 2.7 alpha 1 2009-12-05
+- 2.7 alpha 2 2010-01-09
+- 2.7 alpha 3 2010-02-06
+- 2.7 alpha 4 2010-03-06
+- 2.7 beta 1 2010-04-03
+- 2.7 beta 2 2010-05-08
+- 2.7 rc1 2010-06-05
+- 2.7 rc2 2010-06-19
+- 2.7 final 2010-07-03
+
+
+Possible features for 2.7
+=========================
+
+Nothing here. [Note that a moratorium on core language changes is in effect.]
+
+
+References
+==========
+
+None yet!
+
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+  Local Variables:
+  mode: indented-text
+  indent-tabs-mode: nil
+  sentence-end-double-space: t
+  fill-column: 70
+  coding: utf-8
+  End:

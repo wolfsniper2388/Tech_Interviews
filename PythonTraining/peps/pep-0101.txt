@@ -1,0 +1,620 @@
+PEP: 101
+Title: Doing Python Releases 101
+Version: $Revision$
+Last-Modified: $Date$
+Author: barry@python.org (Barry Warsaw), guido@python.org (Guido van Rossum)
+Status: Active
+Type: Informational
+Created: 22-Aug-2001
+Post-History:
+
+
+Abstract
+
+    Making a Python release is a thrilling and crazy process.  You've heard
+    the expression "herding cats"?  Imagine trying to also saddle those
+    purring little creatures up, and ride them into town, with some of their
+    buddies firmly attached to your bare back, anchored by newly sharpened
+    claws.  At least they're cute, you remind yourself.
+
+    Actually, no that's a slight exaggeration <wink>.  The Python release
+    process has steadily improved over the years and now, with the help of our
+    amazing community, is really not too difficult.  This PEP attempts to
+    collect, in one place, all the steps needed to make a Python release.  It
+    is organized as a recipe and you can actually print this out and check
+    items off as you complete them.
+
+
+How to Make A Release
+
+    Here are the steps taken to make a Python release.  Some steps are more
+    fuzzy than others because there's little that can be automated (e.g.
+    writing the NEWS entries).  Where a step is usually performed by An
+    Expert, the role of that expert is given.  Otherwise, assume the step is
+    done by the Release Manager (RM), the designated person performing the
+    release.  The roles and their current experts are:
+
+    * RM = Release Manager: Georg Brandl <georg@python.org> (Central Europe)
+    * WE = Windows: Martin von Loewis <martin@v.loewis.de> (Central Europe)
+    * ME = Mac: Ronald Oussoren <ronaldoussoren@mac.com> (Central Europe)
+    * DE = Docs: Georg Brandl <georg@python.org> (Central Europe)
+    * IE = Idle Expert: ??
+
+    NOTE: It is highly recommended that the RM contact the Experts the day
+          before the release.  Because the world is round and everyone lives
+          in different timezones, the RM must ensure that the release tag is
+          created in enough time for the Experts to cut binary releases.
+
+          IT IS HIGHLY RECOMMENDED THAT YOU AT LEAST TAG THE TREE 24 HOURS
+          BEFORE A FINAL RELEASE.  This will give the Experts enough time to
+          do their bits before the announcement goes out.
+
+          In any case, the RM MUST wait for the "green light" from the
+          following experts before updating the web pages and sending the
+          announcement: WE, DE
+
+    XXX: We should include a dependency graph to illustrate the steps that can
+    be taken in parallel, or those that depend on other steps.
+
+    As much as possible, the release steps are automated and guided by the
+    release script, which is available in a separate repository:
+
+        http://hg.python.org/release/
+
+    We use the following conventions in the examples below.  Where a release
+    number is given, it is of the form X.YaZ, e.g. 2.6a3 for Python 2.6 alpha
+    3, where "a" == alpha, "b" == beta, "rc" == release candidate.  If a micro
+    release number is used, then we'll say X.Y.MaZ.
+
+    Release tags are named "vX.YaZ".  The branch name for minor release
+    maintenance branches is "X.Y".
+
+    This helps by performing several automatic editing steps, and guides you
+    to perform some manual editing steps.
+
+  ___ Log into irc.freenode.net and join the #python-dev channel.
+
+      You probably need to coordinate with other people around the world.
+      This IRC channel is where we've arranged to meet.
+
+  ___ Check to see if there are any showstopper bugs.
+
+      Go to http://bugs.python.org and look for any open bugs that can block
+      this release.  You're looking at the Priority of the open bugs for the
+      release you're making; here are the relevant definitions:
+
+      release blocker - Stops the release dead in its tracks.  You may not
+                        make any release with any open release blocker bugs.
+
+      deferred blocker - Doesn't block this release, but it will block a
+                         future release.  You may not make a final or
+                         candidate release with any open deferred blocker
+                         bugs.
+
+      critical - Important bugs that should be fixed, but which does not block
+                 a release.
+
+      Review the release blockers and either resolve them, bump them down to
+      deferred, or stop the release and ask for community assistance.  If
+      you're making a final or candidate release, do the same with any open
+      deferred.
+
+  ___ Check the stable buildbots.
+
+      Go to http://www.python.org/dev/buildbot/stable/
+
+      (the trailing slash is required).  Look at the buildbots for the release
+      you're making.  Ignore any that are offline (or inform the community so
+      they can be restarted).  If what remains are (mostly) green buildbots,
+      you're good to go.  If you have non-offline red buildbots, you may want
+      to hold up the release until they are fixed.  Review the problems and
+      use your judgement, taking into account whether you are making an alpha,
+      beta, or final release.
+
+  ___ Make a release clone.
+
+      Create a local clone of the cpython repository (called the "release
+      clone" from now on).
+      
+      Also clone the repo at http://hg.python.org/cpython using the
+      server-side clone feature.  The name of the new clone should preferably
+      have a "releasing/" prefix.  The other experts will use the release
+      clone for making the binaries, so it is important that they have access
+      to it!
+
+      Optionally, set up your local release clone to push to the remote
+      release clone by default (by editing .hg/hgrc to that effect).
+
+  ___ Notify all committers by sending email to python-committers@python.org.
+
+      Since we're now working with a distributed version control system, there
+      is no need to stop everyone from pushing to the main repo; you'll just
+      work in your own clone.  Therefore, there won't be any checkin freezes.
+
+      However, all committers should know the point at which your release
+      clone was made, as later commits won't make it into the release without
+      extra effort.
+
+  ___ Make sure the current branch of your release clone is the branch you
+      want to release from.
+
+  ___ Regenerate Lib/pydoc-topics.py.
+
+      cd to the Doc directory and type ``make pydoc-topics``.  Then copy
+      ``build/pydoc-topics/pydoc-topics.py`` to ``../Lib/pydoc_topics.py``.
+
+  ___ Check the docs for markup errors.
+
+      In the Doc directory, type ``make suspicious``.  If any markup errors
+      are found, fix them.
+
+  ___ Commit any changes to pydoc_topics.py and the doc sources.
+
+  ___ Make sure the SOURCE_URI in ``Doc/tools/sphinxext/pyspecific.py``
+      points to the right branch in the hg repository (or ``default`` for
+      unstable releases of the default branch).
+
+  ___ Bump version numbers via the release script.
+
+      $ .../release/release.py --bump X.YaZ
+
+      This automates updating various release numbers, but you will have to
+      modify a few files manually.  If your $EDITOR environment variable is
+      set up correctly, release.py will pop up editor windows with the files
+      you need to edit.
+
+      It is important to update the Misc/NEWS file, however in recent years,
+      this has become easier as the community is responsible for most of the
+      content of this file.  You should only need to review the text for
+      sanity, and update the release date with today's date.
+
+      Commit the changes once you have reviewed them.
+
+  ___ Check the years on the copyright notice.  If the last release
+      was some time last year, add the current year to the copyright
+      notice in several places:
+
+      ___ README
+      ___ LICENSE (make sure to change on trunk and the branch)
+      ___ Python/getcopyright.c
+      ___ Doc/README.txt (at the end)
+      ___ Doc/copyright.rst
+      ___ Doc/license.rst
+      ___ PC/python_nt.rc sets up the DLL version resource for Windows
+          (displayed when you right-click on the DLL and select
+          Properties).
+      ___ The license.ht file for the distribution on the website
+          contains what purports to be an HTML-ized copy of the LICENSE
+          file from the distribution.  You'll need to bump the version number to
+          the one you're releasing.  BROKEN
+
+  ___ Check with the IE (if there is one <wink>) to be sure that
+      Lib/idlelib/NEWS.txt has been similarly updated.
+
+  ___ For a final release, edit the first paragraph of
+      Doc/whatsnew/X.Y.rst to include the actual release date; e.g. "Python
+      2.5 was released on August 1, 2003."  There's no need to edit this for
+      alpha or beta releases.  Note that Andrew Kuchling often takes care of
+      this.
+
+  ___ Tag the release for X.YaZ.
+
+      $ .../release/release.py --tag X.YaZ
+
+  ___ If this is a final major release, branch the tree for X.Y.
+
+      When making a major release (e.g., for 3.2), you must create the
+      long-lived maintenance branch.
+
+      ___ Note down the current revision ID of the tree.
+
+          $ hg identify
+
+      ___ First, set the original trunk up to be the next release.
+
+          $ .../release/release.py --bump 3.3a0
+
+          ___ Edit all version references in the README
+
+          ___ Move any historical "what's new" entries from Misc/NEWS to
+              Misc/HISTORY.
+
+          ___ The LICENSE file.  Add the pending version to the list of
+              releases, and be sure to check the release dates.
+
+          ___ There's a copy of the license in Doc/license.rst.
+
+          ___ Doc/tutorial/interpreter.rst (2 references to '[Pp]ython32', one
+              to 'Python 3.2').
+
+          ___ Doc/tutorial/stdlib.rst and Doc/tutorial/stdlib2.rst, which have
+              each one reference to '[Pp]ython32'.
+
+          ___ Update the version number in configure.in and re-run autoconf.
+
+          ___ Update the version numbers for the Windows builds in PC/ and
+              PCbuild/, which have references to python32.
+
+              $ find PC/ PCbuild/ -type f | xargs sed -i 's/python32/python33/g'
+              $ hg mv -f PC/os2emx/python32.def PC/os2emx/python33.def
+
+          ___ Commit these changes to the default branch.
+              
+      ___ Now, go back to the previously noted revision and make the
+          maintenance branch *from there*.
+
+          $ hg update deadbeef    # revision ID noted down before
+          $ hg branch 3.2
+
+  ___ Push your commits to the remote release clone.
+
+      $ hg push ssh://hg.python.org/releasing/...
+
+  ___ Notify the experts that they can start building binaries.
+
+  ___ STOP STOP STOP STOP STOP STOP STOP STOP
+
+      At this point you must receive the "green light" from other experts in
+      order to create the release.  There are things you can do while you wait
+      though, so keep reading until you hit the next STOP.
+
+  ___ XXX The WE builds the Windows helpfile, using (in Doc/) either
+
+        $ make htmlhelp   (on Unix)
+
+      or
+
+        > make.bat htmlhelp   (on Windows)
+
+      to create suitable input for HTML Help Workshop in build/htmlhelp. HTML
+      Help Workshop is then fired up on the created python26.hhp file, finally
+      resulting in an python26.chm file.  He then copies the file into the Doc
+      directories of the build trees (once for each target architecture).
+
+      XXX The CHM file should also be scp'd to the docs download location.
+
+  ___ XXX The WE then generates Windows installer files for each Windows
+      target architecture (for Python 2.6, this means x86 and AMD64). He has
+      one checkout tree per target architecture, and builds the pcbuild.sln
+      project for the appropriate architecture. He then edits
+      Tools/msi/config.py to update full_current_version, sets snapshot to
+      False and runs msi.py with ActivePython 2.5 or Python 2.5 with pywin32.
+      For that to work, the following prerequisites must be met:
+
+      - PC\icons.mak must have been run with nmake.
+
+      - The cmd.exe window in which this is run must have Cygwin/bin in its
+        path (atleast for x86).
+
+      - The cmd.exe window must have MS compiler tools for the target
+        architecture in its path (VS 2003 for x86, the platform SDK for
+        AMD64).
+
+      - The cmd.exe window must also have cabarc.exe from the CAB SDK in its
+        path.
+
+      The WE checksums the files (*.msi and *.chm), uploads them to some place
+      in the net, and emails you the location and md5sums.
+
+  ___ Time to build the source tarball.  Be sure to update your clone to the
+      correct branch.  E.g.
+
+      $ hg update 3.2
+
+  ___ Do a "hg status" in this directory.
+
+      You should not see any files.  I.e. you better not have any uncommitted
+      changes in your working directory.
+
+  ___ Use the release script to create the source gzip and bz2 tarballs, md5
+      checksums, documentation tar and zip files, and gpg signature files.
+
+      $ .../release/release.py --export X.YaZ
+
+      This will leave all the relevant files in a subdirectory called
+      'X.YaZ/src', and the built docs in 'X.YaZ/docs' (for final releases).
+
+  ___ scp or rsync all the files to your home directory on dinsdale.python.org.
+
+      While you're waiting for the files to finish uploading, you can continue
+      on with the remaining tasks.  You can also ask folks on #python-dev
+      and/or python-committers to download the files as they finish uploading
+      so that they can test them on their platforms as well.
+
+  ___ Now you want to perform the very important step of checking the
+      tarball you just created, to make sure a completely clean,
+      virgin build passes the regression test.  Here are the best
+      steps to take:
+
+      $ cd /tmp
+      $ tar xvf ~/Python-3.2rc2.tgz
+      $ cd Python-3.2rc2
+      $ ls
+      (Do things look reasonable?)
+      $ ls Lib
+      (Are there stray .pyc files?)
+      $ ls Doc/tools
+      (Make sure it doesn't contain "docutils", "sphinx", "jinja" or
+      "pygments" directories.  Also look for stray .pyc files.)
+      $ ./configure
+      (Loads of configure output)
+      $ make test
+      (Do all the expected tests pass?)
+
+      If you're feeling lucky and have some time to kill, or if you are making
+      a release candidate or final release, run the full test suite:
+
+      $ make TESTOPTS='-u all' test
+
+      If the tests pass, then you can feel good that the tarball is
+      fine.  If some of the tests fail, or anything else about the
+      freshly unpacked directory looks weird, you better stop now and
+      figure out what the problem is.
+
+  ___ Now you need to go to dinsdale.python.org and move all the files in
+      place over there.  Our policy is that every Python version gets its own
+      directory, but each directory may contain several releases.  We keep all
+      old releases, moving them into a "prev" subdirectory when we have a new
+      release.
+
+      So, there's a directory called "3.2" which contains Python-3.2.msi and
+      Python-3.2.tgz, along with a "prev" subdirectory containing
+      Python-3.2a1.msi, Python-3.2a1.tgz, Python-3.2a1.tar.bz2, etc.
+
+      ___ On dinsdale, cd /data/ftp.python.org/pub/python/X.Y[.Z]
+          creating it if necessary.  Make sure it is owned by group 'webmaster'
+          and group-writable.
+
+      ___ Move the previous release files to a directory called 'prev'
+          creating the directory if necessary (make sure the directory has
+          g+ws bits on).  If this is the first alpha release of a new Python
+          version, skip this step.
+
+          For pre-releases (alpha, beta, rc), don't move things into a 'prev'
+          directory, You'll move everything in there when the final release
+          comes out.
+
+      ___ Move the release .tgz, tar.bz2, and .msi files into place, as well
+          as the .asc GPG signature files.
+
+          Make sure they are world readable.  They should also be group
+          writable, and group-owned by webmaster.
+
+      ___ md5sum the files and make sure they got uploaded intact.
+
+      ___ If this is a final release: Move the doc zips and tarballs to
+          /data/ftp.python.org/pub/python/doc/X.Y[.Z] creating the directory
+          if necessary, and adapt the "current" symlink in .../doc to point to
+          that directory.  Note though that if you're releasing a maintenance
+          release for an older version, don't change the current link.
+
+      ___ If this is a final release (even a maintenance release), also unpack
+          the HTML docs to
+          /data/ftp.python.org/pub/docs.python.org/release/X.Y[.Z].
+
+      ___ Let the DE check if the docs are built and work all right.
+
+      ___ If this is a major release: Tell the DE to adapt redirects for
+          docs.python.org/X.Y in the Apache config for docs.python.org, update
+          the script Doc/tools/dailybuild.py to point to the right
+          stable/development branches, and to install it and make the initial
+          checkout.
+
+  ___ For the extra paranoid, do a completely clean test of the
+      release.  This includes downloading the tarball from
+      www.python.org.
+
+      Make sure the md5 checksums match.  Then unpack the tarball,
+      and do a clean make test.
+
+      $ make distclean
+      $ ./configure
+      $ make test
+
+      To ensure that the regression test suite passes.  If not, you
+      screwed up somewhere!
+
+  Now it's time to twiddle the web site.
+
+  To do these steps, you must have the permission to edit the website.  If you
+  don't have that, ask someone on pydotorg@python.org for the proper
+  permissions.  It's insane for you not to have it.
+
+  I'm not going to go into the details of building the site or pushing it
+  live.  Plenty of people on pydotorg can help you, and there's a good README
+  once you get the branch.  All the directories below are named relative to
+  the data subdirectory unless otherwise noted.
+
+  This page will probably come in handy:
+
+  http://docutils.sourceforge.net/docs/user/rst/quickref.html
+
+  None of the web site updates are automated by release.py.
+
+  ___ Build the basic site.
+
+      In the top directory, do an `svn update` to get the latest code.  In the
+      build subdirectory, do `make` to build the site.  Do `make serve` to
+      start service the pages on localhost:8005.  Hit that url to see the site
+      as it is right now.  At any time you can re-run `make` to update the
+      local site.  You don't have to restart the server.
+
+      Don't `svn commit` until you're all done!
+
+  ___ If this is the first release for this version (even a new patch
+      version), you'll need to create a subdirectory inside download/releases
+      to hold the new version files.  It's probably a good idea to copy an
+      existing recent directory and twiddle the files in there for the new
+      version number.
+
+  ___ Add a news section item to the front page by editing newsindex.yml.  The
+      format should be pretty self evident.
+
+  ___ If this is a final release...
+
+      ___ update the 'Quick Links' section on the front page.  Edit the
+          top-level `content.ht` file.
+
+      ___ update the download page, editing `download/content.ht`
+
+      ___ edit the previous release's last release content.ht page to point to
+          the new release.
+
+      ___ update `doc/content.ht` to indicate the new current documentation
+          version, and remove the current version from any 'in development'
+          section. Update the version in the "What's New" link.
+
+      ___ Add the new version to `doc/versions/content.ht`.
+
+  ___ Edit download/releases/content.ht to update the version numbers for
+      this release.  There are a bunch of places you need to touch:
+
+      ___ The subdirectory name as the first element in the Nav rows.
+      ___ Possibly the Releases section, and possibly in the experimental
+          releases section if this is an alpha, beta or release candidate.
+
+  ___ Update the version specific pages.
+
+      ___ cd to download/releases/X.Y.Z
+      ___ Edit the version numbers in content.ht
+      ___ Comment out the link to the CHM file if this is not a final,
+          remove the comment if it is.
+      ___ Update the md5 checksums
+
+      Note, you don't have to copy the actual .tgz or tar.bz2 tarballs into
+      this directory because they only live on dinsdale in the ftp directory.
+
+  ___ When everything looks good, `svn commit` in the data directory.  This
+      will trigger the live site to update itself, and at that point the
+      release is live.
+
+  ___ If this is a final release, create a new python.org/X.Y Apache alias
+      (or ask pydotorg to do so for you).
+
+  Now it's time to write the announcement for the mailing lists.  This is the
+  fuzzy bit because not much can be automated.  You can use an earlier
+  announcement as a template, but edit it for content!
+
+  ___ STOP STOP STOP STOP STOP STOP STOP STOP
+
+      ___ Have you gotten the green light from the WE?
+
+      ___ Have you gotten the green light from the DE?
+
+
+  ___ Once the announcement is ready, send it to the following
+      addresses:
+
+      python-list@python.org
+      python-announce@python.org
+      python-dev@python.org
+
+  Now it's time to do some cleaning up.  These steps are very important!
+
+  ___ Do the guided post-release steps with the release script.
+
+      $ .../release/release.py --done X.YaZ
+
+      Review and commit these changes.
+
+  ___ Merge your release clone into the main development repo:
+
+      $ cd ../cpython                         # your clone of the main repo
+      $ hg pull ssh://hg.python.org/cpython   # update from remote first
+      $ hg pull ../cpython-releaseX.Y         # now pull from release clone
+
+      Now merge your release clone's changes in every branch you touched
+      (usually only one, except if you made a new maintenance release).
+      Easily resolvable conflicts may appear in Misc/NEWS.
+
+      Commit and push to the main repo.
+
+  ___ You can delete the remote release clone, or simply reuse it for the next
+      release.
+      
+  ___ Send email to python-committers informing them that the release has been
+      published.
+
+  ___ Update any release PEPs (e.g. 361) with the release dates.
+
+  ___ Update the tracker at http://bugs.python.org:
+
+      ___ Flip all the deferred blocker issues back to release blocker
+          for the next release.
+
+      ___ Add version X.Y+1 as when version X.Y enters alpha.
+
+      ___ Change non-doc RFEs to version X.Y+1 when version X.Y enters beta.
+
+      ___ Update 'behavior' issues from versions that your release make
+          unsupported to the next supported version.
+
+      ___ Review open issues, as this might find lurking showstopper bugs,
+          besides reminding people to fix the easy ones they forgot about.
+
+
+What Next?
+
+  ___ Verify!  Pretend you're a user: download the files from python.org, and
+      make Python from it. This step is too easy to overlook, and on several
+      occasions we've had useless release files.  Once a general server problem
+      caused mysterious corruption of all files; once the source tarball got
+      built incorrectly; more than once the file upload process on SF truncated
+      files; and so on.
+
+  ___ Rejoice.  Drink.  Be Merry.  Write a PEP like this one.  Or be
+      like unto Guido and take A Vacation.
+
+  You've just made a Python release!
+
+
+Windows Notes
+
+    Windows has a MSI installer, various flavors of Windows have
+    "special limitations", and the Windows installer also packs
+    precompiled "foreign" binaries (Tcl/Tk, expat, etc).  So Windows
+    testing is tiresome but very necessary.
+
+    Concurrent with uploading the installer, the WE installs Python
+    from it twice: once into the default directory suggested by the
+    installer, and later into a directory with embedded spaces in its
+    name.  For each installation, he runs the full regression suite
+    from a DOS box, and both with and without -0. For maintenance
+    release, he also tests whether upgrade installations succeed.
+
+    He also tries *every* shortcut created under Start -> Menu -> the
+    Python group.  When trying IDLE this way, you need to verify that
+    Help -> Python Documentation works.  When trying pydoc this way
+    (the "Module Docs" Start menu entry), make sure the "Start
+    Browser" button works, and make sure you can search for a random
+    module (like "random" <wink>) and then that the "go to selected"
+    button works.
+
+    It's amazing how much can go wrong here -- and even more amazing
+    how often last-second checkins break one of these things.  If
+    you're "the Windows geek", keep in mind that you're likely the
+    only person routinely testing on Windows, and that Windows is
+    simply a mess.
+
+    Repeat the testing for each target architecture.  On XP/2003, try
+    both an Admin and a plain User (not Power User) account. If you
+    can, also test the installer on Windows 9x.
+
+    WRT Step 5 above (verify the release media), since by the time
+    release files are ready to download the WE has generally run many
+    Windows tests on the installer he uploaded, he usually doesn't do
+    anything for Step 5 except a full byte-comparison ("fc /b" if
+    using a Windows shell) of the downloaded file against the file he
+    uploaded.
+
+
+Copyright
+
+    This document has been placed in the public domain.
+
+
+
+Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+End:

@@ -1,0 +1,135 @@
+PEP: 360
+Title: Externally Maintained Packages
+Version: $Revision$
+Last-Modified: $Date$
+Author: Brett Cannon <brett@python.org>
+Status: Active
+Type: Informational
+Content-Type: text/x-rst
+Created: 30-May-2006
+Post-History:
+
+
+.. warning:: No new modules are to be added to this PEP.  It has been
+             deemed dangerous to codify external maintenance of any
+             code checked into Python's code repository.  Code
+             contributers should expect Python's development
+             methodology to be used for any and all code checked into
+             Python's code repository.
+
+Abstract
+========
+
+There are many great pieces of Python software developed outside of
+the Python standard library (a.k.a., the "stdlib").  Sometimes it
+makes sense to incorporate these externally maintained packages into
+the stdlib in order to fill a gap in the tools provided by Python.
+
+But by having the packages maintained externally it means Python's
+developers do not have direct control over the packages' evolution and
+maintenance.  Some package developers prefer to have bug reports and
+patches go through them first instead of being directly applied to
+Python's repository.
+
+This PEP is meant to record details of packages in the stdlib that are
+maintained outside of Python's repository.  Specifically, it is meant
+to keep track of any specific maintenance needs for each package.  It
+should be mentioned that changes needed in order to fix bugs and keep
+the code running on all of Python's supported platforms will be done
+directly in Python's repository without worrying about going through
+the contact developer.  This is so that Python itself is not held up
+by a single bug and allows the whole process to scale as needed.
+
+It also is meant to allow people to know which version of a package is
+released with which version of Python.
+
+
+Externally Maintained Packages
+==============================
+
+The section title is the name of the package as it is known outside of
+the Python standard library.  The "standard library name" is what the
+package is named within Python.  The "contact person" is the Python
+developer in charge of maintaining the package.  The "synchronisation
+history" lists what external version of the package was included in
+each version of Python (if different from the previous Python
+release).
+
+
+ElementTree
+-----------
+
+:Web site:
+    http://effbot.org/zone/element-index.htm
+:Standard library name:
+    xml.etree
+:Contact person:
+    Fredrik Lundh
+
+Patches should not be directly applied to Python HEAD, but instead
+reported to the Python tracker [#python-tracker]_ (critical bug fixes
+are the exception).  Bugs should also be reported to the Python
+tracker.  Both bugs and patches should be assigned to Fredrik Lundh.
+
+
+Expat XML parser
+----------------
+
+:Web site:
+    http://www.libexpat.org/
+:Standard library name:
+    N/A (this refers to the parser itself, and not the Python
+    bindings)
+:Contact person:
+    None
+
+Optik
+-----
+
+:Web site:
+    http://optik.sourceforge.net/
+:Standard library name:
+    optparse
+:Contact person:
+    Greg Ward
+
+External development seems to have ceased.
+
+wsgiref
+-------
+:Web site:
+    None
+:Standard library name:
+    wsgiref
+:Contact Person:
+    Phillip J. Eby
+
+Bugs and patches should pass through the Web-SIG mailing list [#web-sig]_
+before being applied to HEAD. External maintenance seems to have
+ceased.
+
+
+References
+==========
+
+.. [#python-tracker] Python tracker
+   (http://sourceforge.net/tracker/?group_id=5470)
+
+.. [#web-sig] Web-SIG mailing list
+   (http://mail.python.org/mailman/listinfo/web-sig)
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+..
+   Local Variables:
+   mode: indented-text
+   indent-tabs-mode: nil
+   sentence-end-double-space: t
+   fill-column: 70
+   coding: utf-8
+   End:

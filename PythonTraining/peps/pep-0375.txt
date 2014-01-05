@@ -1,0 +1,84 @@
+PEP: 375
+Title: Python 3.1 Release Schedule
+Version: $Revision$
+Last-Modified: $Date$
+Author: Benjamin Peterson <benjamin@python.org>
+Status: Active
+Type: Informational
+Content-Type: text/x-rst
+Created: 8-Feb-2009
+Python-Version: 3.1
+
+
+Abstract
+========
+
+This document describes the development and release schedule for Python 3.1.
+The schedule primarily concerns itself with PEP-sized items.  Small features may
+be added up to and including the first beta release.  Bugs may be fixed until
+the final release.
+
+
+Release Manager and Crew
+========================
+
+=================== ==================
+Position            Name
+=================== ==================
+3.1 Release Manager Benjamin Peterson
+Windows installers  Martin v. Loewis
+Mac installers      Ronald Oussoren
+=================== ==================
+
+
+Release Schedule
+================
+
+- 3.1a1 March 7, 2009
+- 3.1a2 April 4, 2009
+- 3.1b1 May 6, 2009
+- 3.1rc1 May 30, 2009
+- 3.1rc2 June 13, 2009
+- 3.1 final June 27, 2009
+
+
+Features for 3.1
+================
+
+- importlib
+- io in C
+- Update simplejson to the latest external version [#simplejson]_.
+- Ordered dictionary for collections [#ordered]_.
+- auto-numbered replacement fields in str.format() strings [#strformat]_
+- Nested with-statements in one with statement
+
+
+Footnotes
+=========
+
+.. [#simplejson]
+   http://bugs.python.org/issue4136
+
+.. [#ordered] PEP 372
+   http://www.python.org/dev/peps/pep-0372/
+
+.. [#strformat]
+   http://bugs.python.org/issue5237
+
+
+
+Copyright
+=========
+
+This document has been placed in the public domain.
+
+
+
+..
+  Local Variables:
+  mode: indented-text
+  indent-tabs-mode: nil
+  sentence-end-double-space: t
+  fill-column: 70
+  coding: utf-8
+  End:
