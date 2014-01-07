@@ -23,13 +23,15 @@ def string2Num(str):
 / operation downgrade the power of 26 by 1
 '''
 def num2String(num):
-    str=''
-    str+=chr(num%26+97)
+    string=''
+    # deal with a0
+    string+=chr(num%26+97)
     num=num/26
+    # deal with a1...ak-1
     while num!=0:
-        str=chr((num-1)%26+97)+str
+        string+=chr((num-1)%26+97)
         num=(num-1)/26
-    return str
+    return string
 
 
 if __name__=='__main__':

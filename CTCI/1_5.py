@@ -39,3 +39,4 @@ def string_compression(orig_str):
 if __name__=='__main__':
     print string_compression('aaabbccccd')
     print string_compression('abc')
+    print string_compression('aaa')

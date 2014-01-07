@@ -7,11 +7,17 @@ class Magic_Stack (object):
         self.element=[]
         self.min=[]
     
+    ''' always push to element
+        only when min is not empty and x < min[-1], push to min
+    '''
     def push(self, x):
         self.element.append(x)
         if not self.min or x<self.min[-1]:
             self.min.append(x)
     
+    ''' always pop element
+        only when element[-1] == min[-1], pop min
+    '''
     def pop(self):
         if not self.element:
             print 'The stack is empty. Cannot pop'
@@ -19,6 +25,7 @@ class Magic_Stack (object):
         if self.element[-1]==self.min[-1]:
             self.min.pop()
         self.element.pop()
+        
     def get_min(self):
         if not self.min:
             print 'The stack is empty. No min number'

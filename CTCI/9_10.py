@@ -2,6 +2,7 @@
     if each box is strictly larger than the box above it in width, height and depth.
     Implement a method to build the tallest stack possible (find the biggest height). The height of a stack is the sum of all the heights of boxes
 '''
+from copy import deepcopy
 
 class Box(object):
     def __init__(self, height, width, depth):
@@ -36,6 +37,7 @@ def get_stack_height(box_stack):
 
         
 ''' create a box stack out of boxes, using bottom_box as bottom
+    cache the bottom_box <=> max height stack based on the bottom_box in stack_map
     @param boxes: a list of box 
     @param bottom_box: bottom box in stack  
     @param stack_map: box <=> box stack based on the box with the maximum height
@@ -61,9 +63,19 @@ def create_stack(boxes, bottom_box, stack_map):
     
     # insert bottom_box at the beginning of max_stack
     max_stack.insert(0, bottom_box)
-    stack_map[bottom_box]=max_stack
+    
+    ''' add bottom_box <=> max_stack to the hash map
+        Important! use deepcopy here, otherwise, max_stack.insert(0, bottom_box) will
+                    modify the max_stack in stack_map
+    '''
+    stack_map[bottom_box]=deepcopy(max_stack)
     return max_stack
 
+
+''' Iterate through boxes and build a stack using each box as the bottom box, record the tallest one
+    @param boxes: a list of boxes where stack are to be built
+    @return: a tuple of tallest stack height (int) and tallest stack (a list of boxes)
+'''
 def get_max_stack_height(boxes):
     max_height=0
     max_stack=[]
