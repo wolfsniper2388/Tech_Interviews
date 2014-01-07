@@ -23,16 +23,16 @@ def positive_min(iter):
     else:
         return minimum
 
-''' if i know min_repr[1]...min_repr[n-1], then min_repr[n] can be obtained by:
-    min_repr(48)=min(min_repr[48-36], min_repr[48-24], min_repr[48-6], min_repr[48-3], min_repr[48-1])+1
+''' if i know min_repr(1)...min_repr(n-1), then min_repr(n) can be obtained by:
+    min_repr(48)=min(min_repr(48-36), min_repr(48-24), min_repr(48-6), min_repr(48-3), min_repr(48-1)+1
                 =0 if min(...)=0
     if min_repr(48-24) is the minimum then 1 means 24 would be included 
     if all the min_repr(48-i) is 0, then min_repr[48] is also 0
 '''
-def find_min_repr(n, A, min_repr):
+def find_min_repr_helper(n, A, min_repr):
     if min_repr[n] != -1:
         return min_repr[n]
-    prev_min=positive_min([find_min_repr(n-each_num, A, min_repr) for each_num in A if n > each_num])
+    prev_min=positive_min([find_min_repr_helper(n-each_num, A, min_repr) for each_num in A if n > each_num])
     # if prev_min == 0, then n cannot be the sum of any numbers in A
     if prev_min == 0:
         min_repr[n]=0
@@ -42,9 +42,7 @@ def find_min_repr(n, A, min_repr):
         return prev_min+1
     
 
-if __name__=='__main__':
-    N=7
-    A=[4,2]
+def find_min_repr(N, A):
     min_repr=[None]*(N+1)
     for i in range(1,N+1):
         if i in A:
@@ -53,4 +51,9 @@ if __name__=='__main__':
             min_repr[i]=0
         else:
             min_repr[i]=-1
-    print find_min_repr(N, A, min_repr)
+    return find_min_repr_helper(N, A, min_repr)      
+
+if __name__=='__main__':
+    print find_min_repr(7, [4,2])
+    print find_min_repr(10, [5,3,2])
+    
