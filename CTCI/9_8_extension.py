@@ -27,7 +27,7 @@ def positive_min(iter):
     min_repr(48)=min(min_repr(48-36), min_repr(48-24), min_repr(48-6), min_repr(48-3), min_repr(48-1)+1
                 =0 if min(...)=0
     if min_repr(48-24) is the minimum then 1 means 24 would be included 
-    if all the min_repr(48-i) is 0, then min_repr[48] is also 0
+    if all the min_repr(48-i) is 0, then min_repr(48) is also 0
 '''
 def find_min_repr_helper(n, A, min_repr):
     if min_repr[n] != -1:

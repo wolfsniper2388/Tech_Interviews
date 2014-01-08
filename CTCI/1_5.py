@@ -12,12 +12,12 @@
 '''
 
 def string_compression(orig_str):
-    orig_str_list = list(orig_str)
+    orig_ch_list = list(orig_str)
     result_str_list=[]
-    prev_ch=orig_str_list[0]
+    prev_ch=orig_ch_list[0]
     count=1
     # the iteration starts from index 1 not 0
-    for curr_ch in orig_str_list[1:]:
+    for curr_ch in orig_ch_list[1:]:
         # Always compare the current char with the previous char
         if curr_ch == prev_ch:
             count+=1
@@ -31,7 +31,7 @@ def string_compression(orig_str):
     result_str_list.append(prev_ch)
     result_str_list.append(str(count))
     
-    if len(result_str_list) < len(orig_str_list):
+    if len(result_str_list) < len(orig_ch_list):
         return ''.join(result_str_list)
     else:
         return orig_str
