@@ -6,17 +6,7 @@
     
 '''
 
-def binary_search(A, target):
-    low=0
-    hight=len(A)
-    mid=low+(high-low)/2
-    if A[mid] == target:
-        return mid
-    elif A[mid] < target:
-        low=mid+1
-    else:
-        high=mid-1
-    return -1
+
 
 
 def rotated_binary_search(A, target, start, end):
