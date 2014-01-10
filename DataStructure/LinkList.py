@@ -49,6 +49,9 @@ class LinkList(object):
         p.next=q.next
         q.next=p
         
+    def append_node(self,data):
+        self.add_node(data, len(self))
+        
     def del_node_value(self,data):
         'delete the node by its value'
         p=self.head
@@ -131,6 +134,8 @@ class LinkList(object):
         
 if __name__ == '__main__':
     a=LinkList()
+    a.append_node(3)
+    a.print_list()
     for pos in range(5):
         data=pos+1
         a.add_node(data,pos)
