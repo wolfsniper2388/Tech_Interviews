@@ -59,6 +59,7 @@ def binary_search_matrix(matrix, target, start, end):
     
     ''' binary search the quad section point
         find the first quad section coordinate which is larger than target
+        e.g. if we want to search for 100, desired quad_juct will be (1,4) :110
     '''
     while diag_start.is_upper_left(diag_end):
         diag_mid=get_mid(diag_start, diag_end)

@@ -2,12 +2,8 @@
     write a method to find an element in the array
     E.g.
         Input: 5 and [9, 10, 1, 2, 5, 7]
-        Output: 4 (the index of 5 is 4)
-    
+        Output: 4 (the index of 5 is 4)    
 '''
-
-
-
 
 def rotated_binary_search(A, target, start, end):
     mid = start + (end-start)/2
@@ -29,13 +25,27 @@ def rotated_binary_search(A, target, start, end):
             return rotated_binary_search(A, target, mid+1, end)
         else:
             return rotated_binary_search(A, target, start, mid-1)
-    ''' A[mid] == A[start]
-    else:
-        if A[end] != A[mid]:
-       '''     
-       
-       
+
+
+''' find the pivot of rotation, same as find the index of minimum number in A
+'''
+def find_rotation_pivot(A):
+    start=0;
+    end=len(A)-1
+    # A[start] > A[end] means A[start:end] is not sorted ascendingly
+    while A[start]>A[end]:
+        mid=start+(end-start)/2
+        if A[mid]>A[end]:
+            start=mid+1
+        else:
+            end=mid
+    return start
+
+
 if __name__=='__main__':
-    print rotated_binary_search([12,15,1,3,5,7,10,11], 15, 0, 7)
-    print rotated_binary_search([12,15,17,19,25,3,5], 3, 0, 6)
-    print rotated_binary_search([1,1,1,3,4,1], 1, 0, 5)
+    test_cases=[([12,15,1,3,5,7,10,11], 3), ([12,15,17,19,25,3,5], 17), ([1,1,1,3,4,1], 3)]
+    for each_test_case in test_cases:
+        print 'test case', each_test_case
+        print rotated_binary_search(each_test_case[0],each_test_case[1], 0, len(each_test_case[0]))
+        print find_rotation_pivot(each_test_case[0])
+    

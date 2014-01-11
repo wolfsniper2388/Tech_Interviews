@@ -3,7 +3,6 @@
     e.g 259 --> false
 '''
 
-
 def isPalindrome(x):
     div=1
     # x=52725, div=10000
@@ -20,9 +19,5 @@ def isPalindrome(x):
         div/=100
     return True
         
-    
-        
-    
-
 if __name__ == '__main__':
     print isPalindrome(52725)

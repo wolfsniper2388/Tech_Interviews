@@ -69,16 +69,15 @@ class BinaryTree(object):
     def in_order_printNR(self,r):
         'go to the leftmost then go to the right subtree'
         stack=[]
-        p=r
-        while p or stack:
-            while p:
-                stack.append(p)
-                p=p.left
-            if stack:
-                p=stack[-1]
-                stack.pop()
-                print p.data,
-                p=p.right    
+        current=r
+        while current or stack:
+            if current:
+                stack.append(current)
+                current=current.left
+            else:
+                current=stack.pop()
+                print current.data,
+                current=current.right    
     
     def level_order_print(self,r):
         queue=deque([])
@@ -188,7 +187,7 @@ if __name__=='__main__':
     root=t.create_tree(pre_order, in_order)
     print 'Test pre_order_printNR'
     t.pre_order_printNR(root)
-    print 'Test pre_order_printNR'
+    print 'Test in_order_printNR'
     t.in_order_printNR(root)
     print 'Test level_order_print'
     t.level_order_print(root)
