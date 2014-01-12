@@ -1,5 +1,7 @@
-''' Given a roman numeral, convert it to an integer.
+''' Given a Roman numeral, convert it to an integer.
     Input is guaranteed to be within the range from 1 to 3999.
+    Note: one way to validate the Roman numerals is to use the following regular expression:
+        ^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$
 '''
 roman_tuples=(('I', 1), ('V', 5), ('X', 10), ('L', 50), ('C', 100), ('D', 500), ('M', 1000))
 roman_hash=dict((x,y) for x,y in roman_tuples)
