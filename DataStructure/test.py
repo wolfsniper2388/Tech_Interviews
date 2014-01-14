@@ -58,4 +58,4 @@ a[0]='('
 print a
 
 print sorted([3,1,4])
-
+print (1,2) +3
