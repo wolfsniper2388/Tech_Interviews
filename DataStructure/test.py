@@ -57,5 +57,5 @@ a=[None]*4
 a[0]='('
 print a
 
-
+print sorted([3,1,4])
 

@@ -33,6 +33,7 @@ class Graph:
             print 'The edge already exists. Cannot add edge', (vertex1,vertex2,cost)
             return
         self.edge_matrix[vertex1_index][vertex2_index]=cost
+        
     def print_graph(self):
         pprint(self.edge_matrix)
         
@@ -54,13 +55,15 @@ class Graph:
                 
     def bfs(self,start_vertex):
         q=deque([])
-        start_index=self.vertex_list.index(start_vertex)
+        start_index=self.vertex_list.index(start_vertex)        # the index of start_vertex in vertex_list
         q.append(start_index)
         visited=set()
         while q:
             current_index=q[0]
             visited.add(current_index)
+            # for all the next index
             for next_index in range(self.vertex_num):
+                # if next index is neighbor of current index and next index has not been visited
                 if self.edge_matrix[current_index][next_index]!=0 and next_index not in visited:
                     q.append(next_index)
             print self.vertex_list[current_index],
