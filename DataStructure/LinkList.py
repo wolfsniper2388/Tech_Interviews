@@ -59,6 +59,7 @@ class LinkList(object):
             p=p.next
         if p.next==None:
             print data,'Not found in the list'
+            return
         q=p.next
         p.next=q.next
         del q
@@ -81,9 +82,10 @@ class LinkList(object):
     def print_list(self):
         current=self.head.next
         while current:
-            print current.data
+            print current.data,
             current=current.next
-    
+        print
+        
     def reverse_list(self):
         p=self.head.next
         if p==None or p.next==None:
@@ -136,9 +138,9 @@ if __name__ == '__main__':
     a=LinkList()
     a.append_node(3)
     a.print_list()
-    for pos in range(5):
-        data=pos+1
-        a.add_node(data,pos)
+    data=[5,8,9,10,3]
+    for each_data in data:
+        a.append_node(each_data)
     print 'Test creating list'
     a.print_list()
     print 'List length is ', len(a)
