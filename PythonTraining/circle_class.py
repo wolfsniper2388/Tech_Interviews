@@ -34,15 +34,18 @@ class Circle(object):   #new-style class
         return 2*PI*self.radius
     __perimeter=perimeter       #name mangling to keep a local copy
     
-    @staticmethod           #staticmethod - reprograms the dot so that "self" isn't passed in to let you attach a regular function in a class
+    #staticmethod - reprograms the dot so that "self" isn't passed in to let you attach a regular function in a class
+    @staticmethod           
     def angle_to_grade(angle):
         'Look-up the percent grade for a given angle in degrees'
         return math.tan(math.radians(angle))*100.0     
     #angle_to_grade = staticmethod (angle_to_grade)
     
+    
+    # classmethod - reprograms the dot so that "cls" is passed in as the first arg, the purpose is to create 
+    # alternative constructors
     @classmethod
-    def from_bbd(cls,bbd):      #classmethod - reprograms the dot so that "cls" is passed in as the first arg, the purpose is to create 
-                                #               alternative constructors
+    def from_bbd(cls,bbd):
         'Construct a circle from a bounding box diagonal'
         radius=bbd/math.sqrt(2.0)/2.0
         return cls(radius)
