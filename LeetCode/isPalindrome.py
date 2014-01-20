@@ -9,12 +9,12 @@ def isPalindrome(x):
     while x/div>=10:
         div*=10
     while x!=0:
-        #right=the rightmost digit, left=the leftmost digit
+        # right=the rightmost digit, left=the leftmost digit
         right=x%10
         left=x/div
         if left!=right:
             return False
-        #strips off the rightmost digit and the leftmost digit
+        # strips off the rightmost digit and the leftmost digit
         x=(x%div)/10
         div/=100
     return True
