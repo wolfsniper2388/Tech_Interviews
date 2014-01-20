@@ -11,8 +11,11 @@ class Node(object):
 
 class LinkList(object):
     'A Linked list class that supports operation of adding, deleting nodes'
-    def __init__(self):
+    def __init__(self, seq=None):
         self.head=Node(0)
+        if seq:
+            for data in seq:
+                self.append_node(data)
     
     def __repr__(self):
         return '%s(%r)' %(self.__class__.__name__, self.head)
@@ -135,6 +138,8 @@ class LinkList(object):
         return length
         
 if __name__ == '__main__':
+    b=LinkList([1,2,3])
+    b.print_list()
     a=LinkList()
     a.append_node(3)
     a.print_list()

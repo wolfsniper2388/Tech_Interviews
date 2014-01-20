@@ -179,4 +179,3 @@ if __name__=='__main__':
     
     print 'Get largest kth'
     print h.get_kth('max', seq, 4)
-    
