@@ -114,7 +114,7 @@ class LinkList(object):
             p=p.next
         tail.next=p
         
-    def loop_point(self):
+    def get_loop_point(self):
         'Get the interjection of the loop point, i.e. the parameter pos of make_loop'
         p=self.head.next.next
         q=self.head.next
@@ -128,7 +128,7 @@ class LinkList(object):
         return p
     
     def loop_length(self):
-        p=self.loop_point()
+        p=self.get_loop_point()
         loopDict={}
         length=0   
         while p not in loopDict:
@@ -175,5 +175,5 @@ if __name__ == '__main__':
     
     print 'Test loop'
     a.make_loop(1)
-    print 'loop point is', a.loop_point().data
+    print 'loop point is', a.get_loop_point().data
     print 'loop length is', a.loop_length()
