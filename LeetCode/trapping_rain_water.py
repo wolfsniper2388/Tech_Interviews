@@ -3,34 +3,36 @@
     E.g
         Input: [0,1,0,2,1,0,1,3,2,1,2,1]
         Output: 6
-    |                      __
+    |                      ___
     |          ___        |  |___   ___
     |   __    |  |__    __|     |__|  |___
     |__|__|___|____|___|_________________|__
 '''
 
-''' Idea: find the first number A[j] >= the current one A[i]
-    sum += sigma (A[i] - A[k]), for i<k<j
+''' Idea: for each bar, find the max height bar on the left and right. 
+    then for this bar it can hold min(max_left, max_right) - height
 '''
 
 def trapping_rain_water(A):
-    i = 0
-    j = 0
-    sum = 0
-    temp_sum = 0
-    while j < len(A):
-        if A[j] < A[i]:
-            temp_sum += A[i]-A[j]
-        else:
-            sum+=temp_sum
-            temp_sum = 0
-            i=j
-        j+=1
-    return sum
+    left_max=[None]*len(A)
+    maximum = 0
+    volumn=0
+    # i = 0...len(A)-1
+    for i in range(len(A)):
+        left_max[i] = maximum
+        maximum = max(maximum, A[i])
+    maximum = 0
+    # i = len(A)-1 ... 0
+    for i in range(len(A)-1, -1, -1):
+        bottleneck = min(left_max[i], maximum)
+        if bottleneck > A[i]:
+            volumn += bottleneck-A[i] 
+        maximum = max(maximum, A[i])
 
-
+    return volumn
+    
 if __name__=='__main__':
-    test_cases=[[2,1,0,1,2],[0,1,0,2,1,0,1,3,2,1,2,1]]
+    test_cases=[[2,1,0,1,2],[0,1,0,2,1,0,1,3,2,1,2,1], [4,2,3]]
     for each_test_case in test_cases:
         print each_test_case, trapping_rain_water(each_test_case)
             
