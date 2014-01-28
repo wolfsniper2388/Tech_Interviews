@@ -54,6 +54,14 @@ class LinkList(object):
         
     def append_node(self,data):
         self.add_node(data, len(self))
+    
+    def get_tail_node(self):
+        p = self.head
+        if not p.next:
+            return None
+        while p.next:
+            p = p.next
+        return p
         
     def del_node_value(self,data):
         'delete the node by its value'
