@@ -23,7 +23,8 @@ def del_extra_whitespace(str1):
         return ''.join(ch_list)[:j]
     
 if __name__=='__main__':
-    print del_extra_whitespace('   i    like flying  free    ')
-    print del_extra_whitespace('   i    like flying  free')
-    print del_extra_whitespace('i    like flying  free  ')
-    print del_extra_whitespace('i    like flying  fs')
+    test_cases = ['   i    like flying  free    ', '   i    like flying  free', '   i    like flying  free', 
+                  'i    like flying  free  ']
+    for each_test_case in test_cases:
+        print del_extra_whitespace(each_test_case)
+    
