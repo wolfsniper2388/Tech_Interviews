@@ -17,14 +17,14 @@ def get_all_subsets(my_set):
     # e.g. my_set=[1,3,5,6], my_set[:-1]=[1,3,5]
     prev_result=get_all_subsets(my_set[:-1])
     prev_result_size=len(prev_result)
-    # make copy, !!! use deepcopy
-    new_result=deepcopy(prev_result)+deepcopy(prev_result)
-    #new_result=[subset for subset in prev_result]*2
-    # append last_element to each first half set of last_result
-    for each_subset in new_result[:prev_result_size]:
+    new_result = deepcopy(prev_result)
+    for each_subset in deepcopy(prev_result):
         each_subset.append(last_element)
+        if  each_subset not in prev_result:
+            new_result.append(each_subset) 
     return new_result
 
 if __name__=='__main__':
-    a=[5,1,3,7]
-    print get_all_subsets(a)
+    test_cases= [[5,1,3,7], [1,2,2]]
+    for each_test_case in test_cases:
+        print each_test_case, get_all_subsets(sorted(each_test_case))
