@@ -13,8 +13,8 @@ class Node(object):
         return '%s(%r)' %(self.__class__.__name__, self.data)
 
 class BinaryTree(object):
-    def __init__(self):
-        self.root=None
+    def __init__(self, root = None):
+        self.root=root
         self.child_dict={}
     
     def __repr__(self):
@@ -95,15 +95,15 @@ class BinaryTree(object):
                 queue.append(p.right) 
                 level_no.append(level+1)
     
-    def Height(self,r):
+    def get_height(self,r):
         if not r:
             return 0
-        leftHeight=self.Height(r.left)
-        rightHeight=self.Height(r.right)
-        if leftHeight>rightHeight:
-            return 1+leftHeight
+        left_height=self.get_height(r.left)
+        right_height=self.get_height(r.right)
+        if left_height>right_height:
+            return 1+left_height
         else:
-            return 1+rightHeight
+            return 1+right_height
     
     def get_loweset_ancestor(self,r,x1,x2):
         if not self.is_find(r,x1) or not self.is_find(r, x2):
@@ -191,7 +191,7 @@ if __name__=='__main__':
     t.in_order_printNR(root)
     print 'Test level_order_print'
     t.level_order_print(root)
-    print 'Tree height is', t.Height(root)
+    print 'Tree height is', t.get_height(root)
     
     
     print t.is_find(root, 12)
