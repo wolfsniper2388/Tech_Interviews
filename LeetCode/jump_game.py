@@ -6,15 +6,16 @@
         Input: [2,3,1,1,4]
         Output: True
         Input: [3,2,1,0,4]
+        Output: False
 
     Q2. Given an array of non-negative integers, you are initially positioned at the first index of the array.
     Each element in the array represents your maximum jump length at that position.
     Determine if you are able to reach the last index.
     E.g
         Input: [2,3,1,1,4]
-        Output: True
+        Output: 2
         Input: [3,2,1,0,4]
-        Output: False
+        Output: maxint
 '''
 import sys
 
@@ -51,10 +52,12 @@ def jump_game_q2(A):
 
 if __name__=='__main__':
     'Q1'
+    print 'Q1'
     test_cases = [[0,1,2,3], [5,3,2,1,0,8], [5,3,2,1,0,2,1,0,8], [4,2,1,0,3,1,0,8]]
     for each_test_case in test_cases:
         print each_test_case, jump_game_q1(each_test_case)
     'Q2'
+    print 'Q2'
     test_cases = [[2,4,1,1,1,1,8,6], [0,1,2,3,6], [3,2,1,0,5], [7] ]
     for each_test_case in test_cases:
         print each_test_case, jump_game_q2(each_test_case)
