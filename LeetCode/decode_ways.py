@@ -22,6 +22,9 @@ def is_curr_and_prev_digits_decodable(prev, curr):
 def is_curr_digit_decodable(curr):
     return curr != '0'
 
+''' ways[i] = ways[i-1] if curr_digit is decodable and prev_digit and curr_digit combined are not decodable
+            = ways[i-1] + ways[i-2] if curr_digit is decodable and prev_digit and curr_digit combined are also decodable
+'''
 def decode_ways(s):
     if not s:
         return 0

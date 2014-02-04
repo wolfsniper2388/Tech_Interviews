@@ -21,20 +21,43 @@ class BinaryTree(object):
         return '%s(%r)' %(self.__class__.__name__, self.root)
         
     #use pre_order and in_order sequence to recursively create the binary tree
-    def create_tree(self,pre_order,in_order):
+    def create_tree(self,seq1, seq2, indicator='pre_in'):
+        if indicator == 'pre_in':
+            return self.create_tree_pre_in(seq1,seq2)
+        elif indicator == 'post_in':
+            return self.create_tree_post_in(seq1,seq2)
+        else:
+            print 'Invalid indicator'
+            return 
+        
+    def create_tree_pre_in(self, pre_order, in_order):
         if len(pre_order)==0:
             return None
         n=Node(pre_order[0])
         pos=in_order.index(pre_order[0])
-        n.left=self.create_tree(pre_order[1:pos+1],in_order[:pos])
+        n.left=self.create_tree_pre_in(pre_order[1:pos+1],in_order[:pos])
         if n.left!=None:
             n.left.parent=n
-        n.right=self.create_tree(pre_order[pos+1:], in_order[pos+1:])
+        n.right=self.create_tree_pre_in(pre_order[pos+1:], in_order[pos+1:])
         if n.right!=None:
             n.right.parent=n
         self.root=n
         return n
-        
+    
+    def create_tree_post_in(self, post_order, in_order):
+        if len(post_order)==0:
+            return None
+        n=Node(post_order[-1])
+        pos=in_order.index(post_order[-1])
+        n.left=self.create_tree_post_in(post_order[:pos],in_order[:pos])
+        if n.left!=None:
+            n.left.parent=n
+        n.right=self.create_tree_post_in(post_order[pos:-1], in_order[pos+1:])
+        if n.right!=None:
+            n.right.parent=n
+        self.root=n
+        return n
+    
     def pre_order_print(self,r):
         if r:
             print r.data,
@@ -80,21 +103,58 @@ class BinaryTree(object):
                 current=current.right    
     
     def level_order_print(self,r):
-        queue=deque([])
-        level_no=deque([])
-        queue.append(r)
-        level_no.append(1)
-        while queue:
-            p=queue.popleft()
-            level=level_no.popleft()
-            print level,':', p.data
-            if p.left:
-                queue.append(p.left)
-                level_no.append(level+1)
-            if p.right:
-                queue.append(p.right) 
-                level_no.append(level+1)
+        all_levels=[]
+        curr_level_nodes=[]
+        node_q=deque([])
+        n_curr_level_nodes = 1
+        n_next_level_nodes = 0
+        node_q.append(r)
+        while node_q:
+            curr_node=node_q.popleft()
+            n_curr_level_nodes-=1
+            curr_level_nodes.append(curr_node)
+            if curr_node.left:
+                node_q.append(curr_node.left)
+                n_next_level_nodes+=1
+            if curr_node.right:
+                node_q.append(curr_node.right)
+                n_next_level_nodes+=1
+            if n_curr_level_nodes == 0:
+                all_levels.append(curr_level_nodes)
+                curr_level_nodes=[]
+                n_curr_level_nodes = n_next_level_nodes
+                n_next_level_nodes = 0
+        return all_levels
     
+    def zigzag_level_order_print(self,r):
+        all_levels=[]
+        curr_level_nodes=[]
+        node_q=deque([])
+        n_curr_level_nodes = 1
+        n_next_level_nodes = 0
+        node_q.append(r)
+        while node_q:
+            curr_node=node_q.popleft()
+            n_curr_level_nodes-=1
+            curr_level_nodes.append(curr_node)
+            if curr_node.left:
+                node_q.append(curr_node.left)
+                n_next_level_nodes+=1
+            if curr_node.right:
+                node_q.append(curr_node.right)
+                n_next_level_nodes+=1
+            if n_curr_level_nodes == 0:
+                if len(all_levels) % 2 == 0:
+                    all_levels.append(curr_level_nodes)
+                else:
+                    all_levels.append(curr_level_nodes[::-1])
+                curr_level_nodes=[]
+                n_curr_level_nodes = n_next_level_nodes
+                n_next_level_nodes = 0
+        return all_levels
+        
+        
+        
     def get_height(self,r):
         if not r:
             return 0
@@ -181,18 +241,27 @@ if __name__=='__main__':
                 /
                12
     '''
-    t=BinaryTree();
+    t=BinaryTree()
+    t2 = BinaryTree()
     pre_order=[1,2,4,5,6,12,7,3,8,9,10,11]
+    post_order = [4,12,6,7,5,2,8,10,11,9,3,1]
     in_order=[4,2,12,6,5,7,1,8,3,10,9,11]
     root=t.create_tree(pre_order, in_order)
-    print 'Test pre_order_printNR'
-    t.pre_order_printNR(root)
-    print 'Test in_order_printNR'
-    t.in_order_printNR(root)
-    print 'Test level_order_print'
-    t.level_order_print(root)
-    print 'Tree height is', t.get_height(root)
+    root2 = t2.create_tree(post_order, in_order, 'post_in')
+    print root2
+    t2.pre_order_print(t2.root)
     
+    
+    print '\nTest pre_order_printNR'
+    t.pre_order_printNR(root)
+    print '\nTest in_order_printNR'
+    t.in_order_printNR(root)
+    print '\nTest level_order_print'
+    print t.level_order_print(root)
+    print '\nTest zigzag level_order_print'
+    print t.zigzag_level_order_print(root)
+    
+    print 'Tree height is', t.get_height(root)
     
     print t.is_find(root, 12)
     print t.child_dict

@@ -45,10 +45,7 @@ def is_parens_valid(parens):
             raise KeyError
             return False
     # after the for loop, if the stack is not empty, return False, e.g. '('
-    if stack:
-        return False
-    else:
-        return True
+    return False if stack else True
     
 if __name__=='__main__':
     test_cases=[')', '(','([{}()])', '(]', '()[]{}(']
