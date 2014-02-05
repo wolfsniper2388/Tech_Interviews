@@ -2,7 +2,7 @@
 '''
 
 from collections import deque
-class Node(object):
+class TreeNode(object):
     def __init__(self,data):
         self.data=data
         self.left=None
@@ -33,7 +33,7 @@ class BinaryTree(object):
     def create_tree_pre_in(self, pre_order, in_order):
         if len(pre_order)==0:
             return None
-        n=Node(pre_order[0])
+        n=TreeNode(pre_order[0])
         pos=in_order.index(pre_order[0])
         n.left=self.create_tree_pre_in(pre_order[1:pos+1],in_order[:pos])
         if n.left!=None:
@@ -47,7 +47,7 @@ class BinaryTree(object):
     def create_tree_post_in(self, post_order, in_order):
         if len(post_order)==0:
             return None
-        n=Node(post_order[-1])
+        n=TreeNode(post_order[-1])
         pos=in_order.index(post_order[-1])
         n.left=self.create_tree_post_in(post_order[:pos],in_order[:pos])
         if n.left!=None:
@@ -81,12 +81,11 @@ class BinaryTree(object):
         stack=[]
         stack.append(r)
         while stack:    #python way to check if a list is not empty
-            print stack[-1].data,
-            p=stack[-1]
-            stack.pop()
-            if p.right!=None:
+            p=stack.pop()
+            print p.data,
+            if p.right:
                 stack.append(p.right)
-            if p.left!=None:
+            if p.left:
                 stack.append(p.left)
     
     def in_order_printNR(self,r):
@@ -104,53 +103,53 @@ class BinaryTree(object):
     
     def level_order_print(self,r):
         all_levels=[]
-        curr_level_nodes=[]
-        node_q=deque([])
-        n_curr_level_nodes = 1
-        n_next_level_nodes = 0
-        node_q.append(r)
-        while node_q:
-            curr_node=node_q.popleft()
-            n_curr_level_nodes-=1
-            curr_level_nodes.append(curr_node)
-            if curr_node.left:
-                node_q.append(curr_node.left)
-                n_next_level_nodes+=1
-            if curr_node.right:
-                node_q.append(curr_node.right)
-                n_next_level_nodes+=1
-            if n_curr_level_nodes == 0:
-                all_levels.append(curr_level_nodes)
-                curr_level_nodes=[]
-                n_curr_level_nodes = n_next_level_nodes
-                n_next_level_nodes = 0
+        curr_level_TreeNodes=[]
+        TreeNode_q=deque([])
+        n_curr_level_TreeNodes = 1
+        n_next_level_TreeNodes = 0
+        TreeNode_q.append(r)
+        while TreeNode_q:
+            curr_TreeNode=TreeNode_q.popleft()
+            n_curr_level_TreeNodes-=1
+            curr_level_TreeNodes.append(curr_TreeNode)
+            if curr_TreeNode.left:
+                TreeNode_q.append(curr_TreeNode.left)
+                n_next_level_TreeNodes+=1
+            if curr_TreeNode.right:
+                TreeNode_q.append(curr_TreeNode.right)
+                n_next_level_TreeNodes+=1
+            if n_curr_level_TreeNodes == 0:
+                all_levels.append(curr_level_TreeNodes)
+                curr_level_TreeNodes=[]
+                n_curr_level_TreeNodes = n_next_level_TreeNodes
+                n_next_level_TreeNodes = 0
         return all_levels
     
     def zigzag_level_order_print(self,r):
         all_levels=[]
-        curr_level_nodes=[]
-        node_q=deque([])
-        n_curr_level_nodes = 1
-        n_next_level_nodes = 0
-        node_q.append(r)
-        while node_q:
-            curr_node=node_q.popleft()
-            n_curr_level_nodes-=1
-            curr_level_nodes.append(curr_node)
-            if curr_node.left:
-                node_q.append(curr_node.left)
-                n_next_level_nodes+=1
-            if curr_node.right:
-                node_q.append(curr_node.right)
-                n_next_level_nodes+=1
-            if n_curr_level_nodes == 0:
+        curr_level_TreeNodes=[]
+        TreeNode_q=deque([])
+        n_curr_level_TreeNodes = 1
+        n_next_level_TreeNodes = 0
+        TreeNode_q.append(r)
+        while TreeNode_q:
+            curr_TreeNode=TreeNode_q.popleft()
+            n_curr_level_TreeNodes-=1
+            curr_level_TreeNodes.append(curr_TreeNode)
+            if curr_TreeNode.left:
+                TreeNode_q.append(curr_TreeNode.left)
+                n_next_level_TreeNodes+=1
+            if curr_TreeNode.right:
+                TreeNode_q.append(curr_TreeNode.right)
+                n_next_level_TreeNodes+=1
+            if n_curr_level_TreeNodes == 0:
                 if len(all_levels) % 2 == 0:
-                    all_levels.append(curr_level_nodes)
+                    all_levels.append(curr_level_TreeNodes)
                 else:
-                    all_levels.append(curr_level_nodes[::-1])
-                curr_level_nodes=[]
-                n_curr_level_nodes = n_next_level_nodes
-                n_next_level_nodes = 0
+                    all_levels.append(curr_level_TreeNodes[::-1])
+                curr_level_TreeNodes=[]
+                n_curr_level_TreeNodes = n_next_level_TreeNodes
+                n_next_level_TreeNodes = 0
         return all_levels
         
         
@@ -182,8 +181,8 @@ class BinaryTree(object):
     
     
     ''' In this function, we perform two tasks:
-            First is to find if the node is in the tree
-            Second is to maintain a dictionary to record the relationship of the target node and it's ancestors
+            First is to find if the TreeNode is in the tree
+            Second is to maintain a dictionary to record the relationship of the target TreeNode and it's ancestors
             If the x is in the left subtree of r, then (r.data,x):0 else (r.data,x):1
             e.g. (5,12):0 means 12 is in 5's left subtree
     '''
@@ -201,7 +200,7 @@ class BinaryTree(object):
         else:
             return False
         
-    def get_node_NR(self,r,x):
+    def get_TreeNode_NR(self,r,x):
         stack=[]
         stack.append(r)
         while stack:    
@@ -214,13 +213,13 @@ class BinaryTree(object):
             if p.left!=None:
                 stack.append(p.left)
                 
-    def get_node(self,r,x):
+    def get_TreeNode(self,r,x):
         if not r:
             return None;
         if r.data==x:
             return r
-        left_return=self.get_node(r.left,x)
-        right_return=self.get_node(r.right,x)
+        left_return=self.get_TreeNode(r.left,x)
+        right_return=self.get_TreeNode(r.right,x)
         
         if left_return:
             return left_return
@@ -242,11 +241,11 @@ if __name__=='__main__':
                12
     '''
     t=BinaryTree()
-    t2 = BinaryTree()
     pre_order=[1,2,4,5,6,12,7,3,8,9,10,11]
-    post_order = [4,12,6,7,5,2,8,10,11,9,3,1]
     in_order=[4,2,12,6,5,7,1,8,3,10,9,11]
     root=t.create_tree(pre_order, in_order)
+    post_order = [4,12,6,7,5,2,8,10,11,9,3,1]
+    t2 = BinaryTree()
     root2 = t2.create_tree(post_order, in_order, 'post_in')
     print root2
     t2.pre_order_print(t2.root)
@@ -269,6 +268,6 @@ if __name__=='__main__':
     x2=7
     print 'The lowest common ancestor of', x1, x2,'is:', t.get_loweset_ancestor(root, x1,x2).data
 
-    print 'Testing get node'
-    for node in pre_order:
-        print t.get_node(root, node),
+    print 'Testing get TreeNode'
+    for TreeNode in pre_order:
+        print t.get_TreeNode(root, TreeNode),

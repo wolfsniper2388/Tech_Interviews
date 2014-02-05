@@ -105,7 +105,7 @@ def unique_bst_q2_helper(start, end):
         for j in range(len(left_subtrees)):
             for k in range(len(right_subtrees)):
                 # current root is i
-                curr_root = Node(i)
+                curr_root = TreeNode(i)
                 # connect curr_root to left subtree's root and right subtree's root 
                 curr_root.left = left_subtrees[j].root
                 curr_root.right = right_subtrees[k].root

@@ -39,6 +39,6 @@ if __name__=='__main__':
     in_order=[3,5,7,10,15,17,20,30]
     root=t.create_tree(pre_order, in_order)
     for node in in_order:
-        r=t.get_node_NR(root,node)
+        r=t.get_TreeNode_NR(root,node)
         print "r is ", r
         print "r's next is", get_next(r)

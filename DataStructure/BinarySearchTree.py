@@ -1,6 +1,6 @@
 '''	Implement Binary search tree: create tree, add node, find node, delete node
 '''
-from BinaryTree import BinaryTree, Node
+from BinaryTree import BinaryTree, TreeNode
 
 class BinarySearchTree(BinaryTree):
     def create_tree(self,seq):
@@ -10,7 +10,7 @@ class BinarySearchTree(BinaryTree):
         if not seq:
             return None
         mid=(len(seq)-1)/2
-        n=Node(seq[mid])
+        n=TreeNode(seq[mid])
         n.left=self.create_tree_helper(seq[:mid])
         n.right=self.create_tree_helper(seq[mid+1:])
         return n
@@ -30,7 +30,7 @@ class BinarySearchTree(BinaryTree):
             the root of the tree, so call add_node_helper function to actually pass the root parameter
         '''
         if self.root==None:
-            self.root=Node(val)
+            self.root=TreeNode(val)
         else:
             self.add_node_helper(self.root, val)
             
@@ -41,7 +41,7 @@ class BinarySearchTree(BinaryTree):
                 self.add_node_helper(node.left,val)
             #if right subtree is None, then found the place to insert
             else:
-                new_node=Node(val)
+                new_node=TreeNode(val)
                 node.left=new_node
                 new_node.parent=node
         elif val>node.data:
@@ -50,7 +50,7 @@ class BinarySearchTree(BinaryTree):
                 self.add_node_helper(node.right,val)
             #if right subtree is None, then found the place to insert
             else:
-                new_node=Node(val)
+                new_node=TreeNode(val)
                 node.right=new_node
                 new_node.parent=node
         else:

@@ -1,8 +1,8 @@
 ''' Implement a linked list
 '''
 
-class Node(object):
-    'LinkList Node'
+class ListNode(object):
+    'LinkList ListNode'
     def __init__(self,data):
         self.data=data
         self.next=None
@@ -10,9 +10,9 @@ class Node(object):
         return '%s(%r)' %(self.__class__.__name__, self.data)
 
 class LinkList(object):
-    'A Linked list class that supports operation of adding, deleting nodes'
+    'A Linked list class that supports operation of adding, deleting ListNodes'
     def __init__(self, seq=None):
-        self.head=Node(0)
+        self.head=ListNode(0)
         if seq:
             for data in seq:
                 self.append_node(data)
@@ -45,7 +45,7 @@ class LinkList(object):
         if pos>len(self):
             print 'Wrong position'        
             return 
-        p=Node(data)
+        p=ListNode(data)
         q=self.head
         for i in range(pos):
             q=q.next
@@ -76,7 +76,7 @@ class LinkList(object):
         del q
     
     def del_node_pos(self,pos):
-        ''' delete node at the position starting from 0
+        ''' delete ListNode at the position starting from 0
             e.g.
             pos:  0 1 2 3 4
             list: 2 7 9 8 3
