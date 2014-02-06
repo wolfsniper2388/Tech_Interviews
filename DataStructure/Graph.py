@@ -1,7 +1,14 @@
-'''	Implement a directional graph with edge weight
+'''    Implement a directional graph with edge weight
 '''
 from pprint import pprint
 from collections import deque
+
+class GraphNode(object):
+    def __init__(self, data):
+        self.data = data
+    
+    def __repr__(self):
+        return '%s(%r)' %(self.__class__.__name__, self.data)
 
 class Graph:
     def __init__(self,vnumber):
@@ -23,25 +30,23 @@ class Graph:
             return
         self.vertex_list.append(vertex)
     
-    def add_edge(self, vertex1,vertex2,cost):
-        if vertex1==vertex2 or vertex1 not in self.vertex_list or vertex2 not in self.vertex_list:
+    def add_edge(self, vertex1_index,vertex2_index,cost):
+        assert vertex1_index >= 0 and vertex2_index >= 0
+        if vertex1_index >= len(self.vertex_list) or vertex2_index >= len(self.vertex_list):
             print 'Cannot add edge! Please check input'
             return
-        vertex1_index=self.vertex_list.index(vertex1)
-        vertex2_index=self.vertex_list.index(vertex2)
         if self.edge_matrix[vertex1_index][vertex2_index] !=0:
-            print 'The edge already exists. Cannot add edge', (vertex1,vertex2,cost)
+            print 'The edge already exists. Cannot add edge', (self.vertex_list[vertex1_index],self.vertex_list[vertex2_index],cost)
             return
         self.edge_matrix[vertex1_index][vertex2_index]=cost
-        
+    
     def print_graph(self):
         pprint(self.edge_matrix)
         
-    def dfs(self, start_vertex):
-        if start_vertex not in self.vertex_list:
-            print start_vertex,' is not in vertex_list'
+    def dfs(self, start_vertex_index):
+        if start_vertex_index <0 or start_vertex_index>len(self.vertex_list):
+            print start_vertex_index,' invalid'
             return
-        start_vertex_index=self.vertex_list.index(start_vertex)
         visited=set()
         self.dfs_helper(start_vertex_index,visited)
         
@@ -53,30 +58,30 @@ class Graph:
             if next_index not in visited and self.edge_matrix[current_index][next_index]!=0:      
                 self.dfs_helper(next_index,visited)
                 
-    def bfs(self,start_vertex):
+    def bfs(self,start_vertex_index):
         q=deque([])
-        start_index=self.vertex_list.index(start_vertex)        # the index of start_vertex in vertex_list
-        q.append(start_index)
+        q.append(start_vertex_index)
         visited=set()
         while q:
             current_index=q[0]
             visited.add(current_index)
-            # for all the next index
             for next_index in range(self.vertex_num):
-                # if next index is neighbor of current index and next index has not been visited
                 if self.edge_matrix[current_index][next_index]!=0 and next_index not in visited:
                     q.append(next_index)
             print self.vertex_list[current_index],
             q.popleft()
-            
+    
+    def get_neighbors(self, vertex_index):
+        return [self.vertex_list[i] for i in range(len(self.vertex_list)) if self.edge_matrix[vertex_index][i]==1]
     #def is_connected(self, vertex1, vertex2):
         
 if __name__=='__main__':
     ''' The graph is          
+    
         >f-->g<--h
       /   \ 
      /      >
-    a<---d-->e 
+    a<---d-->a 
     |    ^  
     >    |
     b--> c
@@ -85,22 +90,26 @@ if __name__=='__main__':
          i
     '''
     g=Graph(9)
-    for ch in ['a','b','c','d','e','f','g','h','i']:
-        g.add_vertex(ch)
-    g.add_edge('a','b',1)
-    g.add_edge('b','c',1)
-    g.add_edge('c','d',1)
-    g.add_edge('d','a',1)
-    g.add_edge('a','f',1)
-    g.add_edge('f','g',1)
-    g.add_edge('f','e',1)
-    g.add_edge('h','g',1)
-    g.add_edge('d','e',1)
-    g.add_edge('i','c',1)
+    for ch in ['a','b','c','d','a','f','g','h','i']:
+        g.add_vertex(GraphNode(ch))
+    g.add_edge(0,1,1)   # 'a'->'b'
+    g.add_edge(1,2,1)   # 'b'->'c'
+    g.add_edge(2,3,1)   # 'c'->'d'
+    g.add_edge(3,4,1)   # 'd'->'a'
+    g.add_edge(0,5,1)   # 'a'->'f'
+    g.add_edge(5,6,1)   # 'f'->'g'
+    g.add_edge(5,4,1)   # 'f'->'a'
+    g.add_edge(7,6,1)   # 'h'->'g'
+    g.add_edge(3,0,1)   # 'd'->'a'
+    g.add_edge(8,2,1)   # 'i'->'c'
 
     g.print_graph()
     
     print 'Testing DFS'
-    g.dfs('d')
+    g.dfs(3)
     print '\nTesting BFS'
-    g.bfs('d')
+    g.bfs(3)
+    
+    print '\nTesting get_neighbors'
+    for vertex_index in range(9):
+        print vertex_index, g.get_neighbors(vertex_index)

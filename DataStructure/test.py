@@ -12,3 +12,22 @@ print p
 b=0
 a=1 if b==0 else 3
 print a 
+
+
+def foo_wrapper():
+    a=[]
+    foo(a)
+    return a
+
+def foo(a):
+    if len(a) == 10:
+        return 
+    a.append(len(a))
+    foo(a)
+    print a[-1]
+    return 
+
+
+print foo_wrapper()
+
+        
