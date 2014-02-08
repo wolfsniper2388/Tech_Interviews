@@ -30,4 +30,6 @@ def foo(a):
 
 print foo_wrapper()
 
-        
+a='abc'
+a[0] = a[0].upper()
+print a
