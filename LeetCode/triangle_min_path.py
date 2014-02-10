@@ -13,32 +13,30 @@
 '''
 
 import sys
-from copy import deepcopy
+from copy import *
 
-min_sum_path=[]
-min_sum=sys.maxint
 def min_path_1(T):
-    global min_sum_path, min_sum
-    dfs(T,0,0,0,[])
-    return min_sum_path, min_sum
+    min_sum, min_sum_path = dfs(T,0,0,0,[],[sys.maxint],[])
+    return min_sum, min_sum_path
     
 # top_down
-def dfs(T,i,j,curr_sum,curr_sum_path):
-    global min_sum_path,min_sum
+def dfs(T,i,j,curr_sum,curr_sum_path, min_sum, min_sum_path):
     curr_sum += T[i][j]
     curr_sum_path.append(T[i][j])
     if i == len(T)-1:
-        if curr_sum < min_sum:
-            min_sum = curr_sum
-            min_sum_path = deepcopy(curr_sum_path)
-        #curr_sum_path.pop()
-        return
+        if curr_sum < min_sum[0]:
+            min_sum[0] = curr_sum
+            # min_sum_path = deepcopy(curr_sum_path) will not work here, because min_sum_path is now a name tagged to a new object which is invisible outside recursion
+            # so clear min_sum_path first(using del min_sum_path [:] or using min_sum_path[:] = []) and then extend curr_sum_path
+            del min_sum_path [:] 
+            min_sum_path.extend(curr_sum_path)
+        return (min_sum[0], min_sum_path)
     next_i = i+1
     # next_j = j, j+1
     for next_j in range(j,j+2):
-        dfs(T,next_i,next_j,curr_sum,curr_sum_path)
+        dfs(T,next_i,next_j,curr_sum,curr_sum_path, min_sum, min_sum_path)
         curr_sum_path.pop()
-    return 
+    return (min_sum[0], min_sum_path)
 
 # bottom-up
 def min_path_2(T):
@@ -56,5 +54,6 @@ def min_path_2(T):
 
 if __name__=='__main__':
     test_case=[[2],[5,4],[6,5,7],[4,1,8,3]]
-    print test_case, min_path_1(test_case)
+    min_sum, min_sum_path = min_path_1(test_case)
+    print test_case, min_sum, min_sum_path
     print test_case, min_path_2(test_case)
