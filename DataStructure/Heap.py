@@ -134,14 +134,14 @@ class Heap(object):
     '''
     def get_kth(self,indicator,seq,k):
         if indicator == 'min':
-        # build a max heap, and assume the heap is the minimum k numbers of seq
+        # build a max heap, and assume initially the heap consists of the minimum k numbers of seq
             self.build_heap('max', seq[:k])
             for number in seq[k:]:
                 if number < self.heap[0]:
                     self.heap[0] = number
                     self.heapify(0)
         else:
-            # build a min heap, and assume the heap is the maximum k numbers of seq
+            # build a min heap, and assume initially the heap consists of the maximum k numbers of seq
             self.build_heap('min', seq[:k])
             for number in seq[k:]:
                 if number > self.heap[0]:

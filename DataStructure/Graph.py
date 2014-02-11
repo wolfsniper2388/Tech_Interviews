@@ -31,11 +31,8 @@ class Graph:
         self.vertex_list.append(vertex)
     
     def add_edge(self, vertex1_index,vertex2_index,cost):
-        assert vertex1_index >= 0 and vertex2_index >= 0
-        if vertex1_index >= len(self.vertex_list) or vertex2_index >= len(self.vertex_list):
-            print 'Cannot add edge! Please check input'
-            return
-        if self.edge_matrix[vertex1_index][vertex2_index] !=0:
+        assert 0 <= vertex1_index < len(self.vertex_list) and 0 <= vertex2_index < len(self.vertex_list)
+        if self.edge_matrix[vertex1_index][vertex2_index] != 0:
             print 'The edge already exists. Cannot add edge', (self.vertex_list[vertex1_index],self.vertex_list[vertex2_index],cost)
             return
         self.edge_matrix[vertex1_index][vertex2_index]=cost
@@ -50,12 +47,12 @@ class Graph:
         visited=set()
         self.dfs_helper(start_vertex_index,visited)
         
-    def dfs_helper(self,current_index,visited):
-        print self.vertex_list[current_index],
-        visited.add(current_index)
+    def dfs_helper(self,curr_index,visited):
+        print self.vertex_list[curr_index],
+        visited.add(curr_index)
         # search for all the vertices adjacent that has not been visited 
-        for next_index in range(self.vertex_num):
-            if next_index not in visited and self.edge_matrix[current_index][next_index]!=0:      
+        for next_index in self.get_neighbors_indices(curr_index):
+            if next_index not in visited:      
                 self.dfs_helper(next_index,visited)
                 
     def bfs(self,start_vertex_index):
@@ -63,16 +60,22 @@ class Graph:
         q.append(start_vertex_index)
         visited=set()
         while q:
-            current_index=q[0]
-            visited.add(current_index)
-            for next_index in range(self.vertex_num):
-                if self.edge_matrix[current_index][next_index]!=0 and next_index not in visited:
+            curr_index=q.popleft()
+            print self.vertex_list[curr_index],
+            visited.add(curr_index)
+            for next_index in self.get_neighbors_indices(curr_index):
+            #for next_index in range(self.vertex_num):
+                if next_index not in visited:
                     q.append(next_index)
-            print self.vertex_list[current_index],
-            q.popleft()
+            
     
-    def get_neighbors(self, vertex_index):
-        return [self.vertex_list[i] for i in range(len(self.vertex_list)) if self.edge_matrix[vertex_index][i]==1]
+    def get_neighbors_nodes(self, vertex_index):
+        'return a list of nodes that are neighbors of vertex_list[vertex_index]'
+        return [self.vertex_list[i] for i in range(len(self.vertex_list)) if self.edge_matrix[vertex_index][i]!=0]
+    
+    def get_neighbors_indices(self, vertex_index):
+        'return a list of indices that are neighbors of vertex_index'
+        return [i for i in range(len(self.vertex_list)) if self.edge_matrix[vertex_index][i]!=0]
     #def is_connected(self, vertex1, vertex2):
         
 if __name__=='__main__':
@@ -112,4 +115,4 @@ if __name__=='__main__':
     
     print '\nTesting get_neighbors'
     for vertex_index in range(9):
-        print vertex_index, g.get_neighbors(vertex_index)
+        print vertex_index, g.get_neighbors_nodes(vertex_index)
