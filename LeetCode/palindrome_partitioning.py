@@ -28,9 +28,9 @@ def foo(results, one_result, array, start):
         got one solution
     
 '''
-
 from copy import deepcopy
-def is_palindrome(string, start, end):
+
+def is_palindrome_q1(string, start, end):
     while start < end:
         if string[start] != string[end]:
             return False
@@ -47,13 +47,54 @@ def palindrome_partition_q1_helper(s,start, curr_result, results):
         results.append(deepcopy(curr_result))
         return results
     for end in range(start, len(s)):
-        if is_palindrome (s, start, end):
+        if is_palindrome_q1 (s, start, end):
             curr_result.append(s[start:end+1])
-            palindrome_partition_q1_helper(s,start+1, curr_result, results)
+            palindrome_partition_q1_helper(s,end+1, curr_result, results)
             curr_result.pop()
     return results
-     
+
+
+def is_palindrome_q2(string, string_hash):
+    if string in string_hash:
+        #print string,'is in string hash'
+        return string_hash[string]
+    start = 0
+    end = len(string)-1
+    while start < end:
+        if string[start] != string[end]:
+            string_hash[string] = False
+            return False
+        start += 1
+        end -= 1
+    string_hash[string] = True
+    return True
+
+''' Let s = 'abcddcb'
+    Suppose I know all the minimal cuts from i+1 to n-1 (end), how can I infer the minimal cuts at index i? 
+    let min_cuts[i] be the number of minimum cuts from i to n-1, as said, suppose I know min_cuts[i+1], min_cuts[i+2], ... min_cuts[n-1]
+    then min_cuts[i] = min(min_cuts[i], min_cuts[j+1]+1) for j = i to n-1
+    we should only update min_cuts[i] if s[i:j+1] (s[i],s[i+1] ... s[j] ) is a palindrome
+    How can we do that? scan the substring each time? actually we can have a hash map to store if a substring is a palindrome or not
+    and this can be encapsulated in a function call: palindrome_partition_q2
+    What's the initial min_cuts[i] for i = 0 to n-1 ?  we will assume the worst possible case where no substring is palindrome, so 
+    the initial value of min_cuts[i] = len(s) - i -1
+    take s =                   'a b c d d c b' as an example
+    the final min_cuts will be [1,0,1,2,2,1,0,-1]
+'''
+def palindrome_partition_q2(s):
+    min_cuts = [len(s)-i-1 for i in range(len(s)+1)]
+    string_hash = {}
+    for i in range(len(s)-1, -1,-1):
+        for j in range(i, len(s)):
+            if is_palindrome_q2(s[i:j+1], string_hash):
+                min_cuts[i] = min(min_cuts[i], min_cuts[j+1]+1)
+    return min_cuts[0]
+
+
 if __name__=='__main__':
-    test_cases = ['aaa', 'bcddeffeh', 'aab']
+    test_cases = ['aaa', 'bcddeffeh', 'aab', 'ababbbabbaba', 'abcddcb', 'a']
     for each_test_case in test_cases:
+        print 'Q1'
         print each_test_case, palindrome_partition_q1(each_test_case)
+        print 'Q2'
+        print each_test_case, palindrome_partition_q2(each_test_case) 
