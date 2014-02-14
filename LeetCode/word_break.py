@@ -1,18 +1,18 @@
-''' Given a string s and a dictionary of words dict, 
+''' Q1.
+    Given a string s and a dictionary of words dict, 
     determine if s can be segmented into a space-separated sequence of one or more dictionary words.
     E.g.
         Input: s = 'leetcode'
                dict = ['leet', 'code']
         Output True
-
-
-
-
-dp[], dp[i]=true means that 0-(i-1) can be segmented using dictionary
-for each position in string s, 
-if the current position is true, 
-update dp when any substring starting from the current position is existing in the dictionary
-O(n*setL*wordL)
+    
+    Q2.
+    Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+    Return all such possible sentences.
+    E.g.
+        Input: s = 'catsanddog'
+               dict = ['cat' 'cats', 'and', 'sand', 'dog'].
+        Output: ['cats and dog', 'cat sand dog'].
 '''
 
 
@@ -31,8 +31,9 @@ O(n*setL*wordL)
     can_break is of length len(s)+1
     we return the value can_break[len(s)]. can_break[len(s)] is the value that if s[0:len(s)-1] can be broken into words in d
     that is exactly what we want to return
+    Time complexity: O(n*setL*wordL)
 '''
-def word_break(s,d):
+def word_break_q1(s,d):
     can_break = [False for i in range(len(s)+1)]
     can_break[0]=True
     for i in range(1, len(s)+1):
@@ -47,4 +48,4 @@ if __name__=='__main__':
     test_cases = [('california',['ca','for','ni','a','la']), ('aaaaaaa',['aaaa','aaa','aa','a']), ('leetcode',['leet','code'])]
     for each_test_case in test_cases:
         s,d = each_test_case
-        print s,d,word_break(s,d)
+        print s,d,word_break_q1(s,d)
