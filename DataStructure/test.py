@@ -28,8 +28,8 @@ def foo(a):
     return 
 
 
-print foo_wrapper()
 
-a='abc'
-a[0] = a[0].upper()
-print a
+results=[]
+results.append(None)
+results[0].append(['cat'])
+print results
