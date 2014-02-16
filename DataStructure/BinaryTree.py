@@ -101,6 +101,24 @@ class BinaryTree(object):
                 print current.data,
                 current=current.right    
     
+    def post_order_printNR(self,r):
+        node_stack = []
+        flag_stack = []
+        while r or flag_stack:
+            while r:
+                node_stack.append(r)
+                flag_stack.append(0)
+                r=r.left
+            r = node_stack.pop()
+            flag = flag_stack.pop()
+            if flag == 0:
+                node_stack.append(r)
+                flag_stack.append(1)
+                r=r.right
+            else:
+                print r.data,
+                r = None
+    
     def level_order_print(self,r):
         all_levels=[]
         curr_level_TreeNodes=[]
@@ -255,6 +273,8 @@ if __name__=='__main__':
     t.pre_order_printNR(root)
     print '\nTest in_order_printNR'
     t.in_order_printNR(root)
+    print '\nTest post_order_printNR'
+    t.post_order_printNR(root)
     print '\nTest level_order_print'
     print t.level_order_print(root)
     print '\nTest zigzag level_order_print'
