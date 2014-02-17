@@ -1,3 +1,4 @@
+from __future__ import division
 def move(node):
     node=node.next
     return node
@@ -28,8 +29,8 @@ def foo(a):
     return 
 
 
+print int(-7/2)
 
-results=[]
-results.append(None)
-results[0].append(['cat'])
-print results
+
+
+print int('-11')
