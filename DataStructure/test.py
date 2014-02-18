@@ -1,4 +1,5 @@
 from __future__ import division
+from collections import deque
 def move(node):
     node=node.next
     return node
@@ -15,22 +16,11 @@ a=1 if b==0 else 3
 print a 
 
 
-def foo_wrapper():
-    a=[]
-    foo(a)
-    return a
+d=set(['dot','dog'])
+print d
 
-def foo(a):
-    if len(a) == 10:
-        return 
-    a.append(len(a))
-    foo(a)
-    print a[-1]
-    return 
+q=deque()
+v=set([])
+print v,q
 
-
-print int(-7/2)
-
-
-
-print int('-11')
+print chr(ord('a')+25)
