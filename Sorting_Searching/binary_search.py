@@ -1,3 +1,6 @@
+''' binary search a target in A, if target not in A, then return the position it can be inserted into A 
+'''
+
 def binary_search(A, target):
     low=0
     high=len(A)-1

@@ -6,32 +6,30 @@
         Output: 'b'
 '''
 
-def find_longest_substring_no_repeating_chars(orig_str):
-    ch_list = list(orig_str)
-    ch_hash={}
-    max_len=0
-    max_start=0
-    for i, ch in enumerate(ch_list):
-        if ch not in ch_hash:
-            # reverse hashing: hash char to its index
-            ch_hash[ch] = i
+def find_longest_substring_no_repeating_chars(s):
+    max_len = 0
+    exist = [0 for i in range(256)]
+    ''' i: index of previously occurred char, j : index of current char
+        e.g. s = 'abcdcef'
+             when j = 4, i = 2
+    ''' 
+    i=j=0       
+    while j < len(s):
+        if exist[ord(s[j])]:
+            # update max_len
+            max_len = max(max_len, j-i)
+            # find i and delete all chars in table from i to j
+            while s[i]<s[j]:
+                exist[ord(s[i])] = 0
+                i+=1
+            i+=1
+            j+=1
         else:
-            # update max_len if necessary
-            max_len = max(max_len, i-max_start)
-            old_start = max_start
-            # can easily locate the index of previously occurred char: ch_hash[ch]
-            # the new start will the index +1
-            max_start = ch_hash[ch]+1
-            # delete all the chars from old_start to max_start in hash table
-            for ch in ch_list[old_start:max_start]:
-                del ch_hash[ch]
-            # update the index of current char to current index:i
-            ch_hash[ch]=i
-    curr_len = len(ch_list) - max_start
-    if curr_len > max_len:
-        return orig_str[max_start:]
-    else:
-        return orig_str[max_start:max_start+max_len]
+            exist[ord(s[j])] = 1
+            j+=1
+    return max(max_len, len(s)-i)
+        
+        
     
 if __name__=='__main__':
     test_strings=['bbbbbb', 'abcdcef', 'abcdcefgd']

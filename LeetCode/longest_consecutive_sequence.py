@@ -35,5 +35,5 @@ def longest_consecutive_seq(A):
 
 if __name__=='__main__':
     test_cases = [[100, 4, 200, 1, 3, 2], [13,14,2,15,3,17,16,18], [0,3,7,2,5,8,4,6,0,1]]
-    for each_test_case in test_cases[-1:]:
+    for each_test_case in test_cases:
         print each_test_case, longest_consecutive_seq(each_test_case)

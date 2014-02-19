@@ -1,4 +1,4 @@
-''' Given a binary tree where each node contains a number value, Print all paths which sum to a given ValueError
+''' Given a binary tree where each node contains a number value, Print all paths which sum to a given value
     The path does not need to start at the root or end at a leaf
 '''
 

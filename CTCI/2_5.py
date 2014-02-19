@@ -45,12 +45,8 @@ def add_lists_reverse(list1, list2):
 if __name__=='__main__':
     test_cases = [([7,1,6],[1,5,9,2]), ([1],[9,9,9]), ([1,2,3],[4,5,6]), ([8,5,6],[3,7,5])]
     for each_test_case in test_cases:
-        list1=LinkList()
-        list2=LinkList()
-        for each_num in each_test_case[0]:
-            list1.append_node(each_num)
-        for each_num in each_test_case[1]:
-            list2.append_node(each_num)
+        list1=LinkList(each_test_case[0])
+        list2=LinkList(each_test_case[1])
         print each_test_case
         add_lists_reverse(list1, list2).print_list()
         

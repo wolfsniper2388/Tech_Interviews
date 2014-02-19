@@ -7,7 +7,7 @@
         Elements in a combination must be in non-descending order. 
         The solution set must not contain duplicate combinations.
     E,g.
-        Input: [2,3,5,6], target=19
+        Input: [2,3,5,6], target=10
         Output: [[2,2,2,2,2], [2,2,2,3,3], [2,2,6], [2,3,5], [5,5]]
         
     Q.2 

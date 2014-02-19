@@ -84,30 +84,11 @@ class LRU(object):
 
 if __name__=='__main__':
     lru = LRU(4)
-    print '36,10'
     lru.set(36, 10)
-    print lru.head
-    print lru.tail
-    print '25,20'
     lru.set(25, 20)
-    print lru.head
-    print lru.tail
-    print '76,30'
     lru.set(76, 30)
-    print lru.head
-    print lru.tail
-    print '97,40'
     lru.set(97, 40)
-    print lru.head
-    print lru.tail
-    print '36,12'
     lru.set(36, 12)
-    print lru.head
-    print lru.tail
-    print 'get 36'
-    print lru.get(36)
-    print lru.head
-    print lru.tail
     lru.set(52, 50)
 
     

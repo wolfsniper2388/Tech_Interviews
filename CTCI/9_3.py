@@ -1,6 +1,6 @@
 ''' A magic index in an array A[0...n-1] is defined to be an index such that A[i]=i
     Q1 Given a sorted array of distinct integers, write a method to find a magic index in array A, if one exists
-    Q2 wha if the values are not distinct
+    Q2 what if the values are not distinct
 '''
 
 ''' Q1

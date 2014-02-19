@@ -10,6 +10,7 @@
     
 '''
 import sys
+
 def buy_sell_stock_q1(A):
     if not A:
         return 
@@ -45,6 +46,8 @@ def buy_sell_stock_q2(A):
     A.pop()     
     return total_profit
 
+''' scan from left, then scan from right
+'''
 def buy_sell_stock_q3(A):
     if not A:
         return 0

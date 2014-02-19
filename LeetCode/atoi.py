@@ -25,24 +25,21 @@ import sys
 def atoi(orig_str):
     if orig_str == '':
         return 0
-    
-    ch_list=list(orig_str)
     num=0
     sign=1
     i=0
-    while ch_list[i] == ' ':
+    while orig_str[i] == ' ':
         i+=1
-    
-    if ch_list[i] == '-':
+    if orig_str[i] == '-':
         sign=-1
         i+=1
-    if ch_list[i] == '+':
+    if orig_str[i] == '+':
         sign=1
         i+=1
-    while i<len(ch_list) and '0'<=ch_list[i]<='9':
-        if num > 214748364 or (num == 214748364 and int(ch_list[i])-int('0')>7):
+    while i<len(orig_str) and '0'<=orig_str[i]<='9':
+        if num > 214748364 or (num == 214748364 and int(orig_str[i])>7):
             return sys.maxint*sign
-        num = num*10+int(ch_list[i])-int('0')
+        num = num*10+int(orig_str[i])
         i+=1
     return num*sign
 

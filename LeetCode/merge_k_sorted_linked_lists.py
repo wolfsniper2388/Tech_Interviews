@@ -4,14 +4,6 @@
 from Heap import Heap
 from LinkList import LinkList
 import sys
-'''
-def is_all_reach_end(datas):
-    for data in datas:
-        if data != sys.maxint:
-            return False
-    return True
-''' 
-
 
 def merge_lists(lists):
     ''' merge len(lists) sorted linked lists, and return the result linked list

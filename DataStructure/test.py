@@ -22,5 +22,5 @@ print d
 q=deque()
 v=set([])
 print v,q
-
+print int('0')
 print chr(ord('a')+25)

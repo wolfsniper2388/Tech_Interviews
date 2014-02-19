@@ -58,9 +58,6 @@ def isPalindrome_2_helper(first_node, length):
     
         
 if __name__ == '__main__':
-    a=LinkList()
-    for pos,data in enumerate([3,1,2,5,2,1,3]):
-        a.add_node(data,pos)
-    a.print_list()
+    a=LinkList([3,1,2,5,2,1,3])
     print isPalindrome_1(a)
     print isPalindrome_2(a)

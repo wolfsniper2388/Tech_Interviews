@@ -18,6 +18,9 @@ isMatch("aab", "c*a*b") -> true
 isMatch("abcbcd", "a.*c.*d") = true
 ''' 
 
+def regex_match(string, pattern):
+    return is_match(string, pattern, 0, 0)
+
 ''' If the next character of p is NOT '*', then it must match the current character of s. 
         Continue pattern matching with the next character of both s and p.
     If the next character of p is '*', then we do a brute force exhaustive matching of 
@@ -52,7 +55,8 @@ def is_match(string, pattern, s_index, p_index):
     return is_match(string, pattern, s_index, p_index+2)
 
 if __name__=='__main__':
-    test_cases=[('abc', 'abc', 0, 0), ('abcd', '.*', 0, 0), ('abcbcd', 'a.*c.*d', 0, 0), ('abcbcd', 'a*c.*d', 0, 0), ('a', 'aa', 0, 0),
-                ('aa', 'a', 0, 0), ('a', '', 0, 0), ('', 'a', 0, 0), ('', 'a*', 0, 0)]
+    test_cases=[('abc', 'abc'), ('abcd', '.*'), ('abcbcd', 'a.*c.*d'), ('abcbcd', 'a*c.*d'), ('a', 'aa'),
+                ('aa', 'a'), ('a', ''), ('', 'a'), ('', 'a*')]
     for each_test_case in test_cases:
-        print each_test_case, is_match(*each_test_case)
+        string,pattern=each_test_case
+        print each_test_case, regex_match(string, pattern)

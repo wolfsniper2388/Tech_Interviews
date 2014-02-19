@@ -11,6 +11,7 @@
 
 ''' Idea: for each bar, find the max height bar on the left and right. 
     then for this bar it can hold min(max_left, max_right) - height
+    scan from left and then scan from right
 '''
 
 def trapping_rain_water(A):

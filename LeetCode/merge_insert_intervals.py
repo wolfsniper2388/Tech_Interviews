@@ -22,8 +22,9 @@ class Interval:
         return self.start<other.start
         
         
-''' merge all the intervals in intervals
-    @param intervals: a list of original intervals to be merged
+''' merge all the intervals in orig_intervals
+    refer to CTCI 1_5
+    @param orig_intervals: a list of original intervals to be merged
     @return: a list of intervals that has been merged 
 '''
 def merge_intervals(orig_intervals):
@@ -61,7 +62,7 @@ def insert_intervals(orig_intervals, target_interval):
         else:
             low = mid
             break
-    # after the while loop the position to be inserted in orig_intervals is low
+    # after the while loop the position to be inserted in orig_intervals is low, refer to binary search
     result_intervals = orig_intervals[:low-1]
     orig_intervals.insert(low, target_interval)
     return result_intervals + merge_intervals(orig_intervals[low-1:])
@@ -69,10 +70,10 @@ def insert_intervals(orig_intervals, target_interval):
     
 if __name__ == '__main__':
     'Q1'
-    '''test_cases = [[(1,3),(9,18), (8,10), (2,6)],[(1,1)], [(1,2), (2,3), (2,2)], [(2,6), (1,7)] ]
+    test_cases = [[(1,3),(9,18), (8,10), (2,6)],[(1,1)], [(1,2), (2,3), (2,2)], [(2,6), (1,7)] ]
     for each_test_case in test_cases:
         orig_intervals = [Interval(*each_tuple) for each_tuple in each_test_case]
-        print each_test_case, merge_intervals(orig_intervals)'''
+        print each_test_case, merge_intervals(orig_intervals)
     'Q2'
     test_cases = [([(1,2),(3,5),(6,7),(8,10),(12,16)], (4,9)), ([(1,3),(6,9)], (2,5))]
     for each_test_case in test_cases:

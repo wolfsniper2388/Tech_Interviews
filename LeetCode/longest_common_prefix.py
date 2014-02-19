@@ -2,6 +2,8 @@
 '''
 
 def find_longest_common_prefix(strs):
+    if not strs:
+        return ''
     pos = 0
     min_len = min([len(each_str) for each_str in strs])
     while pos < min_len:
@@ -15,7 +17,7 @@ def find_longest_common_prefix(strs):
     return strs[0][:pos]
 
 if __name__=='__main__':
-    test_cases=[['abcd', 'abc', 'abcef'], ['', 'acd', 'acde'], ['wife', 'wifefg', 'wab', 'wb']]
+    test_cases=[['abcd', 'abc', 'abcef'], ['', 'acd', 'acde'], ['wife', 'wifefg', 'wab', 'wb'],[]]
     for each_test_case in test_cases:
         print each_test_case, find_longest_common_prefix(each_test_case)
         

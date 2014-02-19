@@ -14,7 +14,7 @@ class Input_Type:
 
 def is_num(orig_str):
                         #     space    sign  digit  dot   exp
-    transition_matrix = [[-1,    0  ,    3,    1,    2,   -1], # state 0
+    transition_matrix = [[-1,    0  ,    3,    1,    2,   -1],  # state 0
                          [-1,    8,     -1,    1,    4,    5],  # state 1
                          [-1,   -1,     -1,    4,   -1,   -1],  # state 2
                          [-1,   -1,     -1,    1,    2,   -1],  # state 3
