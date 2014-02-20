@@ -1,26 +1,17 @@
 from __future__ import division
 from collections import deque
-def move(node):
-    node=node.next
-    return node
 
-from LinkList import LinkList
-a_list=LinkList([1,2,3,4])
-p = a_list.head.next
-print p
-p = move(p)
-print p
+a1=int(0b0000111111)
+a2=int('101110', 2)
+a3=0b0011
+print bin(a3<<2)
+print a1,a2
 
-b=0
-a=1 if b==0 else 3
-print a 
+print (~0<<1) & 0b1010
+print bin(~(1 << 6 -1))
+print (~((1 << 6) -1))
 
-
-d=set(['dot','dog'])
-print d
-
-q=deque()
-v=set([])
-print v,q
-print int('0')
-print chr(ord('a')+25)
+a=5
+b=a
+a+=1
+print a,b

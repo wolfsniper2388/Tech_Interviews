@@ -7,7 +7,7 @@
         Output: 5
     
     Q2.
-    Instead of shortest lenght, find all shortest transformation sequence(s) from start to end
+    Instead of shortest length, find all shortest transformation sequence(s) from start to end
     E.g.
         Input: start='hit', end='cog', dict = ['hot','dot','dog','lot','log']
         Output: [['hit','hot','dot','dog','cog'],['hit','hot','lot','log','cog']]
