@@ -9,7 +9,7 @@ def get_next_smallest(n):
     
     ''' let p be the position of the rightmost non-trailing zero
         let c0 be the number of trailing 0s to the right of p
-        let c1 be the number of 1s ro the right of p
+        let c1 be the number of 1s to the right of p
         e.g.
         n=11011001111100
         c0=2, c1=5, p=7, notice that p==c0+c1 is always true 
@@ -34,6 +34,9 @@ def get_next_smallest(n):
 
 def get_prev_largest(n):
     tmp=n
+    ''' let c1 be the trailing 1s to the right of p
+        let c0 be the number of 0s to the right of p
+    '''
     c0=c1=0
     while tmp & 1 == 1:
         c1+=1
