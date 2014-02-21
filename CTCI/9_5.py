@@ -2,26 +2,25 @@
 '''
 
 
-''' find all permutations of my_str
-    @param my_str: the passed in string
-    @return: a list strings of all permutations of my_str
+''' find all permutations of s
+    @param s: the passed in string
+    @return: a set of strings consisting all permutations of s
 '''
-def get_all_permutations(my_str):
-    if len(my_str)==1:
-        return [my_str]
-    prev_str = my_str[:-1]
-    last_element = my_str[-1]
+def get_all_permutations(s):
+    if len(s)==1:
+        return set([s])
+    prev_str = s[:-1]
+    last_element = s[-1]
     prev_result=get_all_permutations(prev_str)
-    new_result=[]
+    new_result=set()
     for each_prev_permutation in prev_result:
         for position in range(len(each_prev_permutation)+1):
             # insert last_element in each position
             new_string=each_prev_permutation[position:]+last_element+each_prev_permutation[:position]
-            if new_string not in new_result:
-                new_result.append(new_string)
+            new_result.add(new_string)
     return new_result
 
 if __name__=='__main__':
-    test_cases = ['abc', 'aac', 'a']
+    test_cases = ['abc', 'aca', 'a']
     for each_test_case in test_cases:
         print each_test_case, get_all_permutations(each_test_case)

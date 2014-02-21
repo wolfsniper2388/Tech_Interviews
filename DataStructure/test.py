@@ -15,3 +15,8 @@ a=5
 b=a
 a+=1
 print a,b
+
+a=set(['ab','ba'])
+print a
+for item in a:
+    print item
