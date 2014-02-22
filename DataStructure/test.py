@@ -20,3 +20,8 @@ a=set(['ab','ba'])
 print a
 for item in a:
     print item
+    
+s=set(['a','a','b'])
+print s
+s.remove('a')
+print s
