@@ -177,7 +177,7 @@ if __name__=='__main__':
     for key in a:
         t.add_node(key)
     r=t.root
-    t.level_order_print(r)
+    print t.level_order_print(r)
     print t.find_node(r, 3)
     print 'root is ',t.root
     '''
