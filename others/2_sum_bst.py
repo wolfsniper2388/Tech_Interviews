@@ -16,33 +16,29 @@ from BinarySearchTree import BinarySearchTree
 
 def normal_next(curr_node, normal_stack):
     'return the next node of curr_node in the in-order traversal'
-    if normal_stack and curr_node == normal_stack[-1]:
-        tmp=normal_stack.pop()
+    if normal_stack:
+        normal_stack.pop()
     if curr_node.right:
         next_node = curr_node.right
-        while next_node.left:
+        while next_node:
             normal_stack.append(next_node)
             next_node = next_node.left
-        return next_node
-    else:
-        return tmp
+    return normal_stack[-1]
+
     
     
 def reverse_next(curr_node, reverse_stack):
     'return the next node of curr_node in the reverse-in-order traversal'
-    if reverse_stack and curr_node == reverse_stack[-1]:
-        tmp=reverse_stack.pop()
+    if reverse_stack:
+        reverse_stack.pop()
     if curr_node.left:
         next_node = curr_node.left
-        while next_node.right:
+        while next_node:
             reverse_stack.append(next_node)
             next_node = next_node.right
-        return next_node
-    else:
-        return tmp
+    return reverse_stack[-1]
+
     
-
-
 def two_sum_bst(root, target):
     normal_stack=[]
     reverse_stack=[]
@@ -85,6 +81,6 @@ if __name__=='__main__':
     for key in a:
         t.add_node(key)
     r=t.root
-    test_cases = [91, 60, 11]
-    for each_test_case in test_cases[-1:]:
+    test_cases = [91, 60, 11,108,57,24,200]
+    for each_test_case in test_cases:
         print two_sum_bst(r, each_test_case)

@@ -11,29 +11,32 @@ The rule is as follows
       z - 25    az - 51   .....   zz - 701    aaz - 727
 '''
 
-import math 
-def string2Num(str):
+def string2num(str):
     num=0
     for i,ch in enumerate(str):
-        num+=(ord(ch)-96)*pow(26,len(str)-i-1)
+        num = num*26+(ord(ch)-96)
     return num-1
 
 '''n=a0+(1+a1)*26^1+(1+a2)*26^2+...+(1+ak-1)*26^(k-1)
 % operation strips off the 26^1
 / operation downgrade the power of 26 by 1
 '''
-def num2String(num):
-    string=''
+def num2string(num):
+    string=[]
     # deal with a0
-    string+=chr(num%26+97)
+    string.append(chr(num%26+97))
     num=num/26
     # deal with a1...ak-1
     while num!=0:
-        string+=chr((num-1)%26+97)
+        string.append(chr((num-1)%26+97))
         num=(num-1)/26
-    return string
+    return ''.join(reversed(string))
 
 
 if __name__=='__main__':
-    print string2Num('aaz')
-    print num2String(727)
+    test_cases = ['a','z','aa','aaa','aaz']
+    for each_test_case in test_cases:
+        num = string2num(each_test_case)
+        print each_test_case, num
+        print num, num2string(num)
+    
