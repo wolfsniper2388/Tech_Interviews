@@ -10,39 +10,28 @@
 '''
 from LinkList import LinkList
 
-def need_reverse(new_head,k):
-    new_head = new_head.next
-    while new_head:
-        new_head=new_head.next
-        k-=1
-        if k==0:
-            return True
-    return False
-'''
-def reverse(new_head,k):
-    k-=1
-    p=new_head.next
-    while k > 0:
+def reverse_nodes_in_k_group(my_list, k):
+    i=0
+    h = my_list.head.next
+    new_head = my_list.head
+    while h:
+        i+=1
+        if i % k == 0:
+            new_head = reverse(new_head, k)
+            h = new_head.next
+        else:
+            h = h.next
+    return my_list
+
+def reverse(new_head, k):
+    p = new_head.next
+    while k-1 > 0:
         q=p.next
         p.next=q.next
         q.next=new_head.next
         new_head.next=q
         k-=1
-''' 
-def reverse_nodes_in_k_group(my_list, k):
-    new_head = my_list.head
-    orig_k=k
-    while need_reverse(new_head, orig_k):
-        k = orig_k-1
-        p=new_head.next
-        while k > 0:
-            q=p.next
-            p.next=q.next
-            q.next=new_head.next
-            new_head.next=q
-            k-=1
-        new_head = p
-    return my_list
+    return p
     
 if __name__=='__main__':
     test_cases=[([1,2,3,4,5],2), ([1,2,3,4,5],3)]

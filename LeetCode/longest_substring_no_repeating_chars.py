@@ -18,8 +18,8 @@ def find_longest_substring_no_repeating_chars(s):
         if exist[ord(s[j])]:
             # update max_len
             max_len = max(max_len, j-i)
-            # find i and delete all chars in table from i to j
-            while s[i]<s[j]:
+            # find i and delete all chars in table before i
+            while s[i]!=s[j]:
                 exist[ord(s[i])] = 0
                 i+=1
             i+=1
@@ -32,7 +32,7 @@ def find_longest_substring_no_repeating_chars(s):
         
     
 if __name__=='__main__':
-    test_strings=['bbbbbb', 'abcdcef', 'abcdcefgd']
+    test_strings=['yxcdacefh','bbbbbb', 'abcdcef', 'abcdcefgd']
     for each_test_string in test_strings:
         print each_test_string, find_longest_substring_no_repeating_chars(each_test_string)
     

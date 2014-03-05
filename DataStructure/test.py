@@ -25,3 +25,8 @@ s=set(['a','a','b'])
 print s
 s.remove('a')
 print s
+
+s='abc'
+s= '#'.join(s)
+s='#'+s+'#'
+print s

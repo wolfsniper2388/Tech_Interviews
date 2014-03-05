@@ -34,15 +34,22 @@ def generate_pascal_triangle(num_rows):
 
 def kth_pascal_triangle_row(k):
     row=[]
+    
     for i in range(k+1):
         for j in range(i-1, 0, -1):
             row[j] = row[j-1]+row[j]
         row.append(1)
+    
+    '''
+    # the following is also correct, but row.insert(0,1) will take O(i) time
+    for i in range(k+1):
+        row.insert(0, 1)
+        for j in range(1,i):
+            row[j] = row[j]+row[j+1]
+    '''
     return row
 
 
-        
-    
 if __name__=='__main__':
     
     test_cases = range(5)
