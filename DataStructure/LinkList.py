@@ -104,9 +104,9 @@ class LinkList(object):
         self.head.next=None
         while p:
             q=p.next    #record p's next
-            #p.next=self.head.next   #the following two steps is equivalent to inserting p at position 0
-            #self.head.next=p
-            self.add_node(p.data, 0)
+            p.next=self.head.next   #the following two steps is equivalent to inserting p at position 0
+            self.head.next=p
+            #self.add_node(p.data, 0)
             p=q
     
     def make_loop(self,pos):

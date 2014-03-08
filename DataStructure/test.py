@@ -16,6 +16,11 @@ b=a
 a+=1
 print a,b
 
+
+a=[1,2,3]
+b=a
+a=None
+print b
 a=set(['ab','ba'])
 print a
 for item in a:
@@ -30,3 +35,7 @@ s='abc'
 s= '#'.join(s)
 s='#'+s+'#'
 print s
+
+a=5
+b=5
+print id(a), id(b)
