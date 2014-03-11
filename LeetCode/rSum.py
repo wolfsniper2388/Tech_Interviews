@@ -10,7 +10,7 @@
     Find all unique triplets in the array which gives the sum of zero.
     e.g
         Input: numbers=[-10, 2, -7, -25, -3, 8, 4, 10]
-        Output: index1=1, index2=2
+        Output: [(-10, 2, 8), (-7,-3,10)], 
         
     Q3. Four-Sum
     Given an array S of n integers, are there elements a, b, c, and d in S such that a + b + c + d = target?
@@ -30,19 +30,12 @@
 import sys
 
 def two_sum(A, target):
-    ''' B[i] = target - A[i]
-        make a hash table recording A[i]
-        if B[i] is in hash table, then found
-        @return: indices tuple (first, second), where A[first]+A[second] == target
-        @time_complexity: O(N)
-    '''
-    num_dict = {}
-    B=[None]*len(A)
-    for i,elem in enumerate(A):
-        num_dict[elem]=1
-        B[i] = target - elem
-        if B[i] in num_dict and A[i] != B[i]:
-            return (A.index(B[i]), i)
+    map={}
+    for i,num in enumerate(A):
+        if num in map:
+            return (i+1, map[num]+1) if i<map[num] else (map[num]+1, i+1)
+        else:
+            map[target-num] = i
     return (-1,-1)
             
         
@@ -82,41 +75,47 @@ def three_sum_2(A):
     return triplets
         
 
-def is_distinct(a,b,c,d):
-    return a!=b and a!=c and a!=d and b!=c and b!=d and c!=d
-
-
-def four_sum(A):
+def is_valid(new_tuple, A, count_in_A):
+    'check if each element in new_tuple appears exactly the same time as in A'
+    count_in_tuple={}
+    for elem in new_tuple:
+        if elem not in count_in_tuple:
+            count_in_tuple[elem]=1
+        else:
+            count_in_tuple[elem]+=1
+    
+    for elem in new_tuple:
+        if count_in_tuple[elem] > count_in_A[elem]:
+            return False
+    return True
+            
+def four_sum(A, target):
     ''' Generate pairwise sum for each two numbers in A, and hash each pair to the sum of its two numbers
         Iterate through the hash table, use two sum technology to find the solution
-        @return: number tuple (a,b,c,d) in A, where a+b+c+d == 0
+        @return: number tuple (a,b,c,d) in A, where a+b+c+d == target
         @time_complexity: O(N^2)
     '''
+    i = 0
     quadruplets=[]
-    pair_dict={}        # pair hash to sum, e.g. (2, 7) <=> 9
+    A=sorted(A)
     for i in range(len(A)):
-        for j in range(i+1, len(A)):
-            pair_dict[(A[i], A[j])]=A[i]+A[j]
-    # modification of two_sum
-    num_dict={}
-    B={}
-    for pair in pair_dict:
-        pair_sum=pair_dict[pair]
-        num_dict[pair_sum]=1        # pair_sum hash to 1, e.g. 9 <=> 1
-        B[pair] = - pair_sum
-        # if B[pair] is in num hash table
-        if B[pair] in num_dict:
-            # get keys from value
-            candidate_pairs=[key for (key, value) in pair_dict.items() if value==B[pair]]
-            for each_candidate in candidate_pairs:
-                quadruplet=(each_candidate[0], each_candidate[1], pair[0], pair[1])
-                # sort and the quadruplet and convert back to tuple
-                quadruplet_sorted=tuple(sorted(quadruplet))
-                if is_distinct(*quadruplet_sorted) and quadruplet_sorted not in quadruplets:
-                    quadruplets.append(quadruplet_sorted)
+        j = len(A)-1
+        while j>i:
+            left = i+1
+            right = j-1
+            while left < right:
+                sum = A[i]+A[left]+A[right]+A[j]
+                if sum > target:
+                    right-=1
+                elif sum < target:
+                    left+=1
+                else:
+                  quadruplets.append([A[i],A[left],A[right],A[j]])
+                  left+=1
+                  right-=1
+            j-=1
     return quadruplets
-
-
+    
 def three_sum_closest(A, target): 
     triplets=[]
     A=sorted(A)
@@ -145,9 +144,9 @@ def three_sum_closest(A, target):
         
     
 if __name__=='__main__':
-    print two_sum([9,7,11,2,3], 14)
-    print three_sum_1([-10, 2, -7, -25, -3, 8, 4, 10])
-    print three_sum_2([-10, 2, -7, -25, -3, 8, 4, 10])
-    print four_sum([-10, 2, -9, 7, 4, 12])
-    print three_sum_closest([-1, 2, 1, -4], 1)
+    print 'two sum', two_sum([9,7,11,2,3], 14)
+    #print three_sum_1([-10, 2, -7, -25, -3, 8, 4, 10])
+    print 'three sum 2', three_sum_2([-10, 2, -7, -25, -3, 8, 4, 10])
+    print 'four sum',four_sum([-10, 2, -9, 7, 4, 4, -4, -4, 12], 0)
+    print 'three sum closest', three_sum_closest([-1, 2, 1, -4], 1)
     
