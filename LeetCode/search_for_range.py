@@ -19,7 +19,7 @@ def search_range(A, target):
     if A[lower] != target:
         return (-1,-1)
     start = lower
-    
+    lower=0
     upper = len(A)
     while lower < upper:
         mid = lower+(upper-lower)/2
@@ -33,7 +33,7 @@ def search_range(A, target):
 
 if __name__=='__main__':
     test_cases = [([8,8,8,8,8,8],8), ([2,8,8,8,8,8,8,8,8,9], 8), ([2,8,8,8,8,8,8,8,8,9], 2), ([2,8,8,8,8,8,8,8,8,9], 9),
-                  ([1,3,4,4,5,6,7,7,7], 4),([2,3,7,8,8,8,9],8)]
+                  ([1,3,4,4,5,6,7,7,7], 4),([2,3,7,8,8,8,9],8), ([1],1)]
     for each_test_case in test_cases:
         A, target = each_test_case
         print A, target, search_range(A, target)

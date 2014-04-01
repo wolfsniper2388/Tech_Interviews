@@ -42,6 +42,26 @@ def add_lists_reverse(list1, list2):
     return sum_list
 
 
+def add_two_lists(list1, list2):
+    sum_list = LinkList()
+    p = list1.head.next
+    q = list2.head.next
+    carry = 0
+    while p or q:
+        first = p.data if p else 0
+        second = q.data if q else 0
+        sum = first+second+carry
+        carry = sum/10
+        sum = sum%10
+        sum_list.append_node(sum)
+        if p:
+            p=p.next
+        if q:
+            q=q.next
+    if carry:
+        sum_list.append_node(carry)
+    return sum_list
+
 if __name__=='__main__':
     test_cases = [([7,1,6],[1,5,9,2]), ([1],[9,9,9]), ([1,2,3],[4,5,6]), ([8,5,6],[3,7,5])]
     for each_test_case in test_cases:
@@ -49,5 +69,5 @@ if __name__=='__main__':
         list2=LinkList(each_test_case[1])
         print each_test_case
         add_lists_reverse(list1, list2).print_list()
-        
+        add_two_lists(list1, list2).print_list()
     

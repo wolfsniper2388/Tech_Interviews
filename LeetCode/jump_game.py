@@ -35,19 +35,18 @@ def jump_game_q1(A):
 def jump_game_q2(A):
     if len(A) == 1:
         return 0
+    if A[0]==0:
+        return sys.maxint
     steps=[None]*len(A)
     steps[0]=0
     min_steps = sys.maxint
-    if A[0] == 0:
-        steps[1] = sys.maxint
-    else:
-        steps[1] = 1
-    for i in range(2, len(A)):
-        for j in range(i):
-            if A[j]+j >= i and steps[j] < min_steps:
-                min_steps = steps[j]
-        steps[i] = min_steps+1
+    for i in range(1, len(A)):
         min_steps = sys.maxint
+        for j in range(i):
+            if A[j]+j >= i:
+                min_steps = min(min_steps, steps[j])
+        steps[i] = min_steps+1
+        
     return steps[-1]
 
 if __name__=='__main__':

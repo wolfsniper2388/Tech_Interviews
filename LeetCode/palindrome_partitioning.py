@@ -92,8 +92,8 @@ def palindrome_partition_q2(s):
 
 
 if __name__=='__main__':
-    test_cases = ['aaa', 'bcddeffeh', 'aab', 'ababbbabbaba', 'abcddcb', 'a']
-    for each_test_case in test_cases:
+    test_cases = ['aaa', 'bcddeffeh', 'aab', 'ababbbabbaba', 'abcddcb', 'a', 'bcdeffhh']
+    for each_test_case in test_cases[-1:]:
         print 'Q1'
         print each_test_case, palindrome_partition_q1(each_test_case)
         print 'Q2'

@@ -57,27 +57,29 @@ def combo_sum_q2_helper(A, target, results, curr_result, i):
     
     if target == A[i]:
         curr_result.append(A[i])
-        if curr_result not in results:
-            results.append(deepcopy(curr_result))
+        if sorted(curr_result) not in results:
+            results.append(deepcopy(sorted(curr_result)))
         curr_result.pop()
-    
+
     curr_result.append(A[i])
     combo_sum_q2_helper(A, target-A[i], results, curr_result, i-1)
     curr_result.pop()
     combo_sum_q2_helper(A, target, results, curr_result, i-1)
-    return results
 
 def combo_sum_q2(A, target):
-    return combo_sum_q2_helper(A, target, [], [], len(A)-1)
+    curr_result=[]
+    results=[]
+    combo_sum_q2_helper(A, target, results, curr_result, len(A)-1)
+    return results
 
 if __name__=='__main__':
     print 'Q1'
-    test_cases = [([2,3,5,6],10), ([7,3,5],10),([2],1)]
+    test_cases = [([2,3,5,6],10), ([7,3,5],10),([2],1), ([7,3,2],18)]
     for each_test_case in test_cases:
         A, target = each_test_case    
         print A, target, combo_sum_q1_helper(A, target, [], [], 0)
     print 'Q2'
-    test_cases = [([1,1,2,5,6,7,10],8), ([7,3,2,6,5],10), ([2],1)]
+    test_cases = [([1,1,2,5,6,7,10],8), ([10,1,2,7,6,1,5], 8),([7,3,2,6,5],10), ([2],1), ([3],3)]
     for each_test_case in test_cases:
         A, target = each_test_case
         print A, target, combo_sum_q2(A, target)
