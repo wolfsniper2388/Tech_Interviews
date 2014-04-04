@@ -50,32 +50,32 @@ def merge_intervals(orig_intervals):
     @return: a list of result intervals where target_interval has been inserted 
 '''
 def insert_intervals(orig_intervals, target_interval):
-    low = 0
-    high = len(orig_intervals)-1
-    target = target_interval.start
-    while low <= high:
-        mid = low+(high-low)/2
-        if orig_intervals[mid].start < target:
-            low = mid+1
-        elif orig_intervals[mid].start > target:
-            high = mid-1
+    result = []
+    if not orig_intervals:
+        result.append(target_interval)
+        return result
+    for curr_interval in orig_intervals:
+        if curr_interval.end < target_interval.start:
+            result.append(curr_interval)
+        elif curr_interval.start > target_interval.end:
+            result.append(target_interval)
+            target_interval = curr_interval
         else:
-            low = mid
-            break
-    # after the while loop the position to be inserted in orig_intervals is low, refer to binary search
-    result_intervals = orig_intervals[:low-1]
-    orig_intervals.insert(low, target_interval)
-    return result_intervals + merge_intervals(orig_intervals[low-1:])
+            target_interval = Interval(min(curr_interval.start, target_interval.start), max(curr_interval.end, target_interval.end))
+    result.append(target_interval)
+    return result
     
     
 if __name__ == '__main__':
     'Q1'
+    print 'Q1'
     test_cases = [[(1,3),(9,18), (8,10), (2,6)],[(1,1)], [(1,2), (2,3), (2,2)], [(2,6), (1,7)] ]
     for each_test_case in test_cases:
         orig_intervals = [Interval(*each_tuple) for each_tuple in each_test_case]
         print each_test_case, merge_intervals(orig_intervals)
     'Q2'
-    test_cases = [([(1,2),(3,5),(6,7),(8,10),(12,16)], (4,9)), ([(1,3),(6,9)], (2,5))]
+    print 'Q2'
+    test_cases = [([(1,2),(3,5),(6,7),(8,10),(12,16)], (4,9)), ([(1,3),(6,9)], (2,5)), ([],[2,7])]
     for each_test_case in test_cases:
         orig_intervals = [Interval(*each_tuple) for each_tuple in each_test_case[0]]
         target_interval = Interval(*each_test_case[1])
