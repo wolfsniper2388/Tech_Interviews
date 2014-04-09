@@ -37,7 +37,7 @@ def word_search_helper(board, i, j, word, visited):
     if i>0 and board[i-1][j] == word[0] and (i-1,j) not in visited:
         if word_search_helper(board, i-1, j, word[1:], visited):
             return True
-        visited.add((i-1,j))
+        visited.remove((i-1,j))
         
     # look left
     if j>0 and board[i][j-1] == word[0] and (i,j-1) not in visited:

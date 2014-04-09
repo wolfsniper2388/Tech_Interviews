@@ -48,7 +48,7 @@ def solve_sudoku(board):
                 empty_pos.append((i,j))
     size = len(empty_pos)
     dfs(board, empty_pos, 0, size)
-    pprint(board)
+    
     
 def is_valid(value, board, row, col):
     ''' check if board[row][col] == value is a valid
@@ -94,4 +94,5 @@ if __name__=='__main__':
               ['.','.','.','.','8','.','.','7','9']]
     print is_valid_sudoku(board)
     solve_sudoku(board)
+    pprint(board)
     
