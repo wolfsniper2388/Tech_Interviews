@@ -75,33 +75,27 @@ def remove_dup_in_list_q1(my_list):
 def remove_dup_in_list_q2(my_list):
     ''' remove all nodes with duplicates, leaving only distinctive elements
     '''
+    if not my_list.head.next:
+        return None
     p = my_list.head
-    q = p.next
-    r = q.next
+    q = p.next.next
     del_flag = False
-    while r:
-        if q.data == r.data:
-            q.next = r.next
-            del r
-            r = q.next
-            del_flag = True
-        else:
-            # if come from the above 'if' check
-            if del_flag:
-                p.next = r
-                del q
-                q = r
-                if r:
-                    r = r.next
-                del_flag = False
+    while q:
+        if q.data!=p.next.data:
+            if not del_flag:
+                p=p.next
+                q=q.next
             else:
-                p = q
-                q = r
-                r = r.next
+                p.next=q
+                q=q.next
+                del_flag=False
+        else:
+            q=q.next
+            del_flag=True
+        
     # deal with situations like 1->1, 1->2->2->3->3
     if del_flag:
-        p.next = r
-        del q
+        p.next = None
     return my_list
 
 
