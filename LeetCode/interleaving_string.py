@@ -29,7 +29,7 @@
     now s2[3] == s3[5], so match[2][3] = match[2][2]
 
 '''
-def is_interleave(s1,s2,s3):
+def is_interleave_1(s1,s2,s3):
     if len(s3) != len(s1)+len(s2):
         return False
     s1 = '@'+s1
@@ -54,8 +54,30 @@ def is_interleave(s1,s2,s3):
                 
     return match[-1][-1]
 
+def helper(s1,s2,s3,i,j,k):
+    if k==-1:
+        return True
+    if (i>=0 and s3[k] == s1[i]) and not (j>=0 and s3[k] == s2[j]):
+        return helper(s1,s2,s3,i-1,j,k-1)
+    elif not (i>=0 and s3[k] == s1[i]) and (j>=0 and s3[k] == s2[j]):
+        return helper(s1,s2,s3,i,j-1,k-1)
+    elif (i>=0 and s3[k] == s1[i]) and (j>=0 and s3[k] == s2[j]):
+        return helper(s1,s2,s3,i-1,j,k-1) or helper(s1,s2,s3,i,j-1,k-1)
+    else:
+        return False;
+
+def is_interleave_2(s1,s2,s3):
+    if len(s1)+len(s2)!=len(s3):
+        return False
+    return helper(s1,s2,s3,len(s1)-1, len(s2)-1, len(s3)-1)
+
+
+
 if __name__=='__main__':
     test_cases = [('aabcc','dbbca','aadbbcbcac'), ('aabcc','dbbca','aadbbbaccc'), ('a','b','ba'), ('a','b','cd')]
     for each_test_case in test_cases:
         s1,s2,s3 = each_test_case
-        print s1,s2,s3,is_interleave(s1,s2,s3)
+        print 'Solution 1'
+        print s1,s2,s3,is_interleave_1(s1,s2,s3)
+        print 'Solution 2'
+        print s1,s2,s3,is_interleave_2(s1,s2,s3)
