@@ -29,19 +29,13 @@ def decode_ways(s):
     if not s:
         return 0
     ways = [0 for i in range(len(s))]
-    if is_curr_digit_decodable(s[0]):
-        ways[0] = 1
-    else:
-        ways[0] = 0
-    if len(s) == 1:
-        return ways[0]
-    if is_curr_and_prev_digits_decodable(s[0],s[1]):
-        ways[1] = 2
-    elif s[0]==s[1]=='0':
-        ways[1] = 0
-    else:
-        ways[1] = 1
-        
+    ways[0]=is_curr_digit_decodable(s[0])
+    if ways[0]==0:
+        return 0;
+    way1=is_curr_digit_decodable(s[1])
+    way2=is_curr_and_prev_digits_decodable(s[0],s[1])
+    ways[1]=way1+way2
+    
     for i in range(2, len(s)):
         way1=way2=0
         # if curr digit is decodable
@@ -50,11 +44,13 @@ def decode_ways(s):
         if is_curr_and_prev_digits_decodable(s[i-1],s[i]):
             way2 = ways[i-2]
         ways[i] = way1 + way2
+        if ways[i]==0:
+            return 0
         
     return ways[-1]
 
 if __name__=='__main__':
-    test_cases = ['12', '2513', '3','2626', '000', '00']
+    test_cases = ['12', '2513', '3','2626', '303', '00']
     for each_test_case in test_cases:
         print each_test_case, decode_ways(each_test_case)
         

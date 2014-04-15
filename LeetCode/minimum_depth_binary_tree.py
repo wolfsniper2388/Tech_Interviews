@@ -6,13 +6,18 @@ from BinaryTree import BinaryTree
 
 def get_min_depth(r, depth):
     # if r is leaf or r has no left child or r has no right child, the min depth is current depth
-    if not r.left or not r.right:
-        return depth
-    else:
-        # get the left min depth and right min depth, return the smaller one
-        left_min_depth = get_min_depth(r.left, depth+1)
-        right_min_depth = get_min_depth(r.right, depth+1)
-        return left_min_depth if left_min_depth < right_min_depth else right_min_depth
+    if not r:
+        return depth-1
+    
+    left_min_depth = get_min_depth(r.left, depth+1)
+    right_min_depth = get_min_depth(r.right, depth+1)
+    
+    if r.left and not r.right:
+        return left_min_depth
+    if not r.left and r.right:
+        return right_min_depth
+    return min(left_min_depth, right_min_depth)
+
 
 if __name__=='__main__':
     ''' The tree is:
