@@ -1,6 +1,9 @@
 from __future__ import division
 from collections import deque
 
+import sys
+print sys.maxint
+
 a1=int(0b0000111111)
 a2=int('101110', 2)
 a3=0b0011

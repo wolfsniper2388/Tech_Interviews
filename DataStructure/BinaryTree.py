@@ -100,6 +100,28 @@ class BinaryTree(object):
                 current=stack.pop()
                 print current.data,
                 current=current.right    
+                
+    def in_order_printO1_space(self,r):
+        curr_node = r
+        prev_node = None
+        while curr_node:
+            if prev_node == curr_node.right:
+                prev_node = curr_node
+                curr_node = curr_node.parent
+            elif not curr_node.left or prev_node == curr_node.left:
+                print curr_node.data,
+                prev_node = curr_node
+                # if has right child , curr_node goes to right child
+                if curr_node.right:
+                    curr_node = curr_node.right
+                # if no right child, curr_node goes up
+                else:
+                    curr_node = curr_node.parent
+            # prev_node == curr_node.parent       
+            else:
+                prev_node = curr_node
+                curr_node = curr_node.left
+                
     
     def post_order_printNR(self,r):
         node_stack = []
@@ -273,6 +295,8 @@ if __name__=='__main__':
     t.pre_order_printNR(root)
     print '\nTest in_order_printNR'
     t.in_order_printNR(root)
+    print '\nTest in_order_print O1 space'
+    t.in_order_printO1_space(root)
     print '\nTest post_order_printNR'
     t.post_order_printNR(root)
     print '\nTest level_order_print'
