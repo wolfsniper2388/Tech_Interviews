@@ -11,9 +11,9 @@ The rule is as follows
       z - 25    az - 51   .....   zz - 701    aaz - 727
 '''
 
-def string2num(str):
+def string2num(s):
     num=0
-    for i,ch in enumerate(str):
+    for ch in s:
         num = num*26+(ord(ch)-96)
     return num-1
 
