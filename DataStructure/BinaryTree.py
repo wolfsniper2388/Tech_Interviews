@@ -248,9 +248,9 @@ class BinaryTree(object):
             if p.data==x:
                 return p
             stack.pop()
-            if p.right!=None:
+            if p.right:
                 stack.append(p.right)
-            if p.left!=None:
+            if p.left:
                 stack.append(p.left)
                 
     def get_TreeNode(self,r,x):

@@ -11,9 +11,7 @@ def check_height(r):
         return 0
     left_height=check_height(r.left)
     right_height=check_height(r.right)
-    if left_height==-1:
-        return -1
-    if right_height==-1:
+    if left_height==-1 or right_height==-1:
         return -1
     if abs(left_height-right_height)>1:
         return -1
