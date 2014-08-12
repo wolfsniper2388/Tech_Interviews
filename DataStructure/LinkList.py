@@ -31,7 +31,7 @@ class LinkList(object):
     def __iter__(self):
         p=self.head.next
         it=[]
-        while p!=None:
+        while p:
             it.append(p.data)
             p=p.next
         return iter(it)
@@ -64,16 +64,21 @@ class LinkList(object):
         return p
         
     def del_node_value(self,data):
-        'delete the node by its value'
-        p=self.head
-        while p.next and p.next.data!=data:
-            p=p.next
-        if p.next==None:
-            print data,'Not found in the list'
+        'delete all nodes with the certain @p data'
+        if not self.head or not self.head.next:
             return
-        q=p.next
-        p.next=q.next
-        del q
+        
+        prev=self.head
+        curr=self.head.next
+        
+        while curr:
+            if curr.data==data:
+                prev.next = curr.next
+                del curr
+                curr = prev.next
+            else:
+                prev = curr
+                curr = curr.next
     
     def del_node_pos(self,pos):
         ''' delete ListNode at the position starting from 0
@@ -151,7 +156,7 @@ if __name__ == '__main__':
     a=LinkList()
     a.append_node(3)
     a.print_list()
-    data=[5,8,9,10,3]
+    data=[5,5,8,5,5,5,9,10,3,5,5]
     for each_data in data:
         a.append_node(each_data)
     print 'Test creating list'
@@ -163,8 +168,8 @@ if __name__ == '__main__':
     a.print_list()
     print 'List length is ', len(a)
     
-    print 'Test deleting node by value'
-    a.del_node_value(2)
+    print 'Test deleting node by value, deleting 5'
+    a.del_node_value(5)
     a.print_list()
     print 'List length is ', len(a)
     
