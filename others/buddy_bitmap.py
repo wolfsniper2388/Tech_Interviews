@@ -42,6 +42,20 @@ def set_bit(A, pos, length):
             if (x%2==0 and A[x-1]==1) or (x%2==1 and x<n and A[x+1]==1):
                 A[(x-1)/2] = 1
             x = (x-1)/2
+
+def clear_bit(A, pos, length):
+    n = len(A)-1    #last index of A
+    for x in range(pos, min(n,min(pos+length, 2*pos+1))):
+        # set self
+        A[x]=0
+        # set descendants
+        while 2*x+1<=n:
+            A[2*x+1] = 0
+            x=2*x+1
+        # set ancestors
+        while x>0:
+            A[(x-1)/2] = 0
+            x = (x-1)/2
                 
 if __name__=='__main__':
     A=[0,0,1,1,0,1,1,1,1,1,0,1]
