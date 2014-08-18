@@ -15,7 +15,7 @@
          /\   / \   / 
         1  1 1   0 1
         Since it's complete binary tree, the nodes can be stored in an array:
-        [0,0,1,1,0,1,1,1,1,1,0,1]
+        [0,0,1,1,0,1,1,1,1,1,0,1] 
         
 '''
 
