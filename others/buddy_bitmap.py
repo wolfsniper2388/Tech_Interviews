@@ -31,12 +31,16 @@ def setbit_down(A, x, n):
     
 
 def set_bit(A, pos, length):
+    if not A or pos<0 or length<=0:
+        return
     n = len(A)-1    #last index of A
-    for x in range(pos, min(n,min(pos+length, 2*pos+1))):
+    for x in range(pos, min(n+1,min(pos+length, 2*pos+1))):
         # set self
+        if A[x] == 1:
+            continue
         A[x]=1
         # set descendants
-        setbit_down(A,x, n)
+        setbit_down(A,x,n)
         # set ancestors
         while x>0:
             if (x%2==0 and A[x-1]==1) or (x%2==1 and x<n and A[x+1]==1):
@@ -44,20 +48,35 @@ def set_bit(A, pos, length):
             x = (x-1)/2
 
 def clear_bit(A, pos, length):
+    if not A or pos<0 or length<=0:
+        return
     n = len(A)-1    #last index of A
-    for x in range(pos, min(n,min(pos+length, 2*pos+1))):
-        # set self
+    for x in range(pos, min(n+1, pos+length)):
+        # clear self
+        if A[x]==0:
+            continue
         A[x]=0
-        # set descendants
+        # clear descendants
         while 2*x+1<=n:
             A[2*x+1] = 0
             x=2*x+1
-        # set ancestors
+        # clear ancestors
         while x>0:
+            if A[(x-1)/2]==0:
+                break
             A[(x-1)/2] = 0
             x = (x-1)/2
                 
 if __name__=='__main__':
     A=[0,0,1,1,0,1,1,1,1,1,0,1]
-    set_bit(A,5,1)
-    print A
+    test_cases = [(x,y) for x in range(len(A)) for y in range(1,len(A)-x+1)]
+    
+    for each_test_case in test_cases:
+        pos, length = each_test_case        
+        A=[0,0,1,1,0,1,1,1,1,1,0,1]
+        set_bit(A,pos, length)
+        print 'after setting bit from ', pos, 'for ', length,'A is: ', A
+        A=[0,0,1,1,0,1,1,1,1,1,0,1]
+        clear_bit(A,pos, length)
+        print 'after clearing bit from ', pos, 'for ', length,'A is: ', A
+        
