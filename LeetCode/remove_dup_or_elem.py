@@ -98,7 +98,9 @@ def remove_dup_in_list_q2(my_list):
         p.next = None
     return my_list
 
-
+''' Given an array and a value, remove all instances of that value in place and return the new array.
+    The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+'''
 def remove_elem(A, elem):
     i=0
     for j in range(len(A)):
