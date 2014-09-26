@@ -22,7 +22,7 @@
 def sort_color(A):
     # i means all the elements before index i (exclusive) should be 0
     i = 0
-    # j means all the elments after index j(exclusive) should be 2
+    # j means all the elements after index j(exclusive) should be 2
     j = len(A)-1
     curr = i
     while curr <= j:
