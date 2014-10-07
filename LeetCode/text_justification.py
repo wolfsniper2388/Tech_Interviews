@@ -24,7 +24,10 @@ def fullJustify(words, L):
         curr_level_str_list = []
         i = one_line_justify(words, L, i, curr_level_str_list)
         
-        
+''' justify one line of words starting from index i in words
+    return the index in words indicating the end of current level
+    str_list is filled after the call
+'''     
 def one_line_justify(words, L, i, str_list):
     remain = L
     while remain > 0:
