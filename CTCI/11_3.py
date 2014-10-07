@@ -1,31 +1,33 @@
 ''' Given a originally ascending sorted array of n integers that has been rotated an unknown number of times,
-    write a method to find an element in the array
+    write a method to find an element in the array with duplicates
     E.g.
-        Input: 5 and [9, 10, 1, 2, 5, 7]
+        Input: 5 and [9, 10, 1, 2, 5, 7, 7, 7]
         Output: 4 (the index of 5 is 4)    
 '''
 
-def rotated_binary_search(A, target, start, end):
-    mid = start + (end-start)/2
-    if A[mid]==target:
-        return mid
+def rotated_binary_search(A, target):
+    start = 0
+    end = len(A)-1
     
-    if start > end:
-        return -1
-    
-    # left side is ordered
-    if A[mid] > A[start]:
-        if A[start] <= target <= A[mid]:
-            return rotated_binary_search(A, target, start, mid-1)
+    while (start <= end):
+        mid = start + (end-start)/2
+        if A[mid]==target:
+            return mid
+        # left side is ordered
+        if A[mid] > A[start]:
+            if A[start] <= target <= A[mid]:
+                end = mid-1
+            else:
+                start = mid+1
+                # right side is orderd
+        elif A[mid] < A[start]:
+            if A[mid] <= target <= A[end]:
+                start = mid+1
+            else:
+                end = mid-1
         else:
-            return rotated_binary_search(A, target, mid+1, end)
-    # right side is orderd
-    elif A[mid] <= A[start]:
-        if A[mid] <= target <= A[end]:
-            return rotated_binary_search(A, target, mid+1, end)
-        else:
-            return rotated_binary_search(A, target, start, mid-1)
-
+            start+=1
+    return False
 
 ''' find the pivot of rotation, same as find the index of minimum number in A
 '''
@@ -43,9 +45,9 @@ def find_rotation_pivot(A):
 
 
 if __name__=='__main__':
-    test_cases=[([12,15,1,3,5,7,10,11], 3), ([12,15,17,19,25,3,5], 17), ([1,1,1,3,4,1], 3)]
+    test_cases=[([12,15,1,3,5,7,10,11], 3), ([12,15,17,19,25,3,5], 17), ([2, 2, 2, 1, 2, 2, 2, 2, 2 ], 1)]
     for each_test_case in test_cases:
         print 'test case', each_test_case
-        print rotated_binary_search(each_test_case[0],each_test_case[1], 0, len(each_test_case[0]))
+        print rotated_binary_search(each_test_case[0],each_test_case[1])
         print find_rotation_pivot(each_test_case[0])
     
