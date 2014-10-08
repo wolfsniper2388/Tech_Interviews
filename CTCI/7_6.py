@@ -14,7 +14,7 @@ class Point(object):
         return '%s%r' %(self.__class__.__name__, (self.x, self.y))
 
 class Line(object):
-    round_precision=2      # round to the 4th decimal digit in a float number 
+    round_precision=4      # round to the 4th decimal digit in a float number 
     epsilon=pow(10, -round_precision)
     def __init__(self,p1,p2):
         self.p1 = p1
