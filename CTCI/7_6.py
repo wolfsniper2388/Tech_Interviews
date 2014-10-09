@@ -84,7 +84,8 @@ def find_best_line (points):
             new_line = Line(first_point, second_point)
             insert_line(new_line, line_hash)
             n_equivalent_lines=count_equivalent_lines(line_hash, new_line)
-            n_points_pass=int( (1+math.sqrt(1+8*n_equivalent_lines))/2 )
+            # n_points_pass * (n_points_pass-1)/2 = n_equivalent_lines
+            n_points_pass=int( (1+math.sqrt(1+8*n_equivalent_lines))/2 )        
             if n_points_pass > n_most_points_pass:
                 n_most_points_pass = n_points_pass
                 best_line=new_line
