@@ -17,10 +17,13 @@ Return the formatted lines as:
 ]
 '''
 
+''' insert extra spaces to the current level from @param start in words to @param end-1 in words
+'''
 def insert_extra_spaces(str_list, start, end, L, words):
     n_extra_spaces = L-len(str_list)
     n_words = end-start
-    if (n_words == 1):
+    #if only one word in the current line or it's the last line, simply append the extra spaces 
+    if (n_words == 1 or end == len(words)):
         str_list.extend([' ']*n_extra_spaces)
         return
     average_space = n_extra_spaces / (n_words-1)
@@ -39,7 +42,7 @@ def insert_extra_spaces(str_list, start, end, L, words):
     return the index in words indicating the end of current level
     str_list is filled after the call
 '''     
-def one_line_justify(words, L, i, str_list):
+def one_line_termintation(words, L, i, str_list):
     remain = L
     while i<len(words) and remain > 0:
         remain -= len(words[i])
@@ -57,34 +60,33 @@ def one_line_justify(words, L, i, str_list):
 
 
 def full_justify(words, L):
-    i=0
-    j=0
+    i=0     #current level start index in words
+    j=0     #next level start index in words
     result = []
+    #invalid input
     if L==0:
-        return []
+        return [""]
+    #invalid input
+    for word in words:
+        if L<len(word):
+            return [""]
     while i<len(words):
         remain = L
         curr_level_str_list = []
-        j = one_line_justify(words, L, i, curr_level_str_list)
+        # first decide where do we stop for the current level
+        j = one_line_termintation(words, L, i, curr_level_str_list)
+        # next insert the extra spaces
         insert_extra_spaces(curr_level_str_list,i,j,L,words)
         result.append(''.join(curr_level_str_list))
         i=j
     return result
         
-        
-
-        
 if __name__=='__main__':
-    test_cases=["This is an example of text justifications", "This is an apple", "This is an erro", "This is ant", "hello this is my first programming test in python", ""]
+    test_cases=[("This is an example of text justifications",16), ("This is an apple",16), ("This is an erro",16), ("This is ant",16), 
+                ("hello this is my first programming test in python",16), ("a b c d e",1), ("",0), ("what must be shall be.",12)]
     for each_test_case in test_cases:
-        words = each_test_case.split()
+        words,L = each_test_case
+        words=words.split()
         str_list = []
         print words
-        '''
-        j = one_line_justify(words, 16,0, str_list)
-        print j
-        print str_list
-        insert_extra_spaces(str_list, 0, j , 16, words) 
-        print str_list
-        '''
-        print full_justify(words, 16 )
+        print full_justify(words, L)
