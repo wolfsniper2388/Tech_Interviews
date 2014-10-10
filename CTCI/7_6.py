@@ -12,13 +12,15 @@ class Point(object):
         self.y=y
     def __repr__(self):
         return '%s%r' %(self.__class__.__name__, (self.x, self.y))
+    def __eq__(self,other):
+        return self.x==other.x and self.y==other.y
 
 class Line(object):
     round_precision=4      # round to the 4th decimal digit in a float number 
     epsilon=pow(10, -round_precision)
     def __init__(self,p1,p2):
-        self.p1 = p1
-        self.p2 = p2
+        self.p1=p1
+        self.p2=p2
         if not Line.is_float_equivalent(p1.x, p2.x):
             self.slope = round( (p2.y-p1.y)/(p2.x-p1.x), Line.round_precision)
             self.intercept = round( p2.y- (self.slope)*(p2.x), Line.round_precision)
@@ -48,14 +50,15 @@ def insert_line(new_line, line_hash):
         line_hash[key].append(new_line)
 
 
-''' count the number of equivalent lines with the keys of 
+''' count the number of points passed by each line with the keys of 
         (new_line.slope, new_line.intercept)
         (new_line.slope+epsilon, new_line.intercept)
         (new_line.slope-epsilon, new_line.intercept)
     in the line_hash
 '''
         
-def count_equivalent_lines(line_hash, new_line):
+def get_points_passed_on_line(line_hash, new_line):
+    '''
     key0 = (new_line.slope, new_line.intercept)
     count0 = len(line_hash[key0])
     if new_line.slope == sys.float_info.max:
@@ -70,7 +73,35 @@ def count_equivalent_lines(line_hash, new_line):
         if key2 in line_hash:
             count2 = len(line_hash[key2])
         return count0+count1+count2
+        '''
+    key0 = (new_line.slope, new_line.intercept)
+    count0 = count_points_passes(line_hash[key0])
+    if new_line.slope == sys.float_info.max:
+        return count0
+    count1=count2=0
+    key1 = (new_line.slope+Line.epsilon, new_line.intercept)
+    key2 = (new_line.slope-Line.epsilon, new_line.intercept)
+    if key1 in line_hash:
+        count1 = count_points_passes(line_hash[key1])
+    if key2 in line_hash:
+        count2 = count_points_passes(line_hash[key2])
+    return count0+count1+count2
+        
+''' count how many points on those parallel lines
+'''
+def count_points_passes(lines):
+    point_set = set()
+    n_points_passes = 0
+    for each_line in lines:
+        if each_line.p1 not in point_set:
+            point_set.add(each_line.p1)
+            n_points_passes += 1
+        if each_line.p2 not in point_set:
+            point_set.add(each_line.p2)
+            n_points_passes += 1
+    return n_points_passes
     
+
 
 ''' find the line which passes through the most number of points
     @param points: the list of points on the 2D plane 
@@ -81,11 +112,11 @@ def find_best_line (points):
     best_line=None
     for first_index, first_point in enumerate(points):
         for second_point in points[first_index+1:]:
+            if first_point == second_point:
+                continue
             new_line = Line(first_point, second_point)
             insert_line(new_line, line_hash)
-            n_equivalent_lines=count_equivalent_lines(line_hash, new_line)
-            # n_points_pass * (n_points_pass-1)/2 = n_equivalent_lines
-            n_points_pass=int( (1+math.sqrt(1+8*n_equivalent_lines))/2 )        
+            n_points_pass=get_points_passed_on_line(line_hash, new_line)
             if n_points_pass > n_most_points_pass:
                 n_most_points_pass = n_points_pass
                 best_line=new_line
@@ -100,7 +131,8 @@ if __name__=='__main__':
     P4=Point(4/3,5)
     P5=Point(-1,0)
     P6=Point(10/3,0)
-    points=[P1,P2,P3,P4,P5,P6]
+    P7=Point(10/3,0)
+    points=[P1,P2,P3,P4,P5,P6,P7]
     best_result=find_best_line(points) 
     best_line=best_result[0]
     points_count=best_result[1]
@@ -108,4 +140,4 @@ if __name__=='__main__':
         print 'the best line is x=%f' %(best_line.intercept)
     else:    
         print 'the best line is y=%fx+%f' %(best_line.slope, best_line.intercept)
-    print 'the number of points it passes is', points_count 
+    print 'the number of points it passes is', points_count

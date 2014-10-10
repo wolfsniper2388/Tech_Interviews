@@ -17,14 +17,13 @@ def del_extra_whitespace(str1):
             ch_list[j]=ch_list[i]
             j+=1
             j_moving = False
-    if ch_list[j-1]==' ':
-        return ''.join(ch_list)[:j-1]
-    else:
+    if j==0 or ch_list[j-1]!=' ':
         return ''.join(ch_list)[:j]
+    return ''.join(ch_list)[:j-1]
     
 if __name__=='__main__':
     test_cases = ['   i    like flying  free    ', '   i    like flying  free', '   i    like flying  free', 
-                  'i    like flying  free  ']
+                  'i    like flying  free  ', '         ']
     for each_test_case in test_cases:
         print del_extra_whitespace(each_test_case)
     
