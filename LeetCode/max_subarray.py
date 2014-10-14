@@ -4,6 +4,35 @@
         Output: ([4, -1, 2, 1], 6)
 '''
 
+
+import sys
+def max_sum_subarray_divide_and_conquer_helper(A, start, end):
+    if start>=end:
+        return A[start]
+    mid = start+(end-start)/2
+    left_max_sum_ret = max_sum_subarray_divide_and_conquer_helper(A, start, mid-1)
+    right_max_sum_ret = max_sum_subarray_divide_and_conquer_helper(A, mid+1,end)
+    left_max_sum = -sys.maxint
+    right_max_sum = -sys.maxint
+    sum=0
+    for i in range(mid, start-1, -1):
+        sum+=A[i]
+        if sum > left_max_sum:
+            left_max_sum = sum
+    sum=0
+    for i in range(mid+1, end+1):
+        sum+=A[i]
+        if sum > right_max_sum:
+            right_max_sum = sum
+    return max(left_max_sum+right_max_sum, left_max_sum_ret, right_max_sum_ret)
+        
+    
+
+
+def max_sum_subarray_divide_and_conquer(A):
+    return max_sum_subarray_divide_and_conquer_helper(A, 0, len(A)-1)
+    
+
 ''' Algorithm:
         maintain three pointers: curr, start, end, which record the curr position, the position of the
         current max subarray start and the position of the current max subarray end
@@ -31,3 +60,5 @@ if __name__=='__main__':
     test_cases = [[1], [-2,1,-3,4,-1,2,1,-5,4], [4,1,2,3], [1,-2,3,10,-4,7,2,-5]]
     for each_test_case in test_cases:
         print each_test_case, find_max_subarray(each_test_case)
+        print max_sum_subarray_divide_and_conquer(each_test_case)
+
