@@ -8,7 +8,7 @@
                    [6,5,7],
                   [4,1,8,3]
                 ]
-         Output: 13 (2+5+5+1)        
+         Output: 12 (2+4+5+1)        
  
 '''
 
@@ -44,10 +44,7 @@ def min_path_2(T):
     p=[0]*(n+2)
     while n >= 0:
         for i in range(n+1):
-            if p[i] < p[i+1]:
-                p[i] = T[n][i] + p[i] 
-            else:
-                p[i] = T[n][i] + p[i+1]
+            p[i] = T[n][i]+min(p[i],p[i+1])
         n-=1
     return p[0]
     

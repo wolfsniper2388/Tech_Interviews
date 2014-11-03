@@ -24,7 +24,6 @@ def find_substr(S,T):
         then move the window to right by one
     ''' 
     for start in range(n-m*word_len+1):
-        whole_substr=S[start:start+m*word_len]
         each_start = start
         while each_start <= start+(m-1)*word_len:
             each_substr=S[each_start: each_start+word_len]

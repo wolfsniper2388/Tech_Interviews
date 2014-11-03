@@ -19,7 +19,7 @@ def rotated_binary_search(A, target):
                 end = mid-1
             else:
                 start = mid+1
-                # right side is orderd
+                # right side is ordered
         elif A[mid] < A[start]:
             if A[mid] <= target <= A[end]:
                 start = mid+1

@@ -38,3 +38,32 @@ PrintFactors (96)
 4 * 3 * 2 * 2 * 2
 3 * 2 * 2 * 2 * 2 * 2
 '''
+
+from copy import deepcopy
+from math import *
+
+def find_factors(n):
+    results = []
+    curr_result = []
+    num_map = {}
+    find_factors_helper(n,results, curr_result)
+    return results
+
+
+def find_factors_helper(n, results, curr_result):
+    for i in range(2, int(floor(sqrt(n)))+1):
+        if n % i == 0:
+            curr_result.append(i)
+            curr_result.append(n/i)
+            tmp = sorted(curr_result)
+            if tmp not in results:
+                results.append(deepcopy(tmp))
+            curr_result.pop()
+            find_factors_helper(n/i, results, curr_result)
+            curr_result.pop()
+            
+
+if __name__=='__main__':
+    test_cases = [12,24,32,96]
+    for each_test_case in test_cases:
+        print each_test_case, find_factors(each_test_case)

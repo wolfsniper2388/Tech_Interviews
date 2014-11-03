@@ -41,15 +41,14 @@ def merge_two_lists_helper(head_1, head_2):
     if not head_2:
         return head_1
     if head_1.data < head_2.data:
-        ret = head_1
-        ret.next = merge_two_lists_helper(head_1.next, head_2)
+        head_1.next = merge_two_lists_helper(head_1.next, head_2)
+        return head_1
     else:
-        ret = head_2
-        ret.next = merge_two_lists_helper(head_1, head_2.next)
-    return ret
+        head_2.next = merge_two_lists_helper(head_1, head_2.next)
+        return head_2
     
 if __name__=='__main__':
-    test_cases = [([1,3,5,6],[2,4]), ([1,3,5],[]), ([1,2,3,4],[5,6,7,8])]
+    test_cases = [([1,3,5,6],[2,4]), ([1,3,5],[]), ([1,2,3,4],[5,6,7,8]),([2],[1])]
     for each_test_case in test_cases:
         listA_list,listB_list=each_test_case
         listA = LinkList(listA_list)
