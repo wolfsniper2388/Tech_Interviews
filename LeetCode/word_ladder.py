@@ -27,6 +27,9 @@ def word_ladder_len(start, end, dictionary):
     q.append(start)
     visited.add(start)
     min_len=0
+    # string <=> [prev strings]
+    path_map = {}
+    path_map[start] = []
     while q:
         s=q.popleft()
         n_curr_level_words-=1
@@ -38,21 +41,22 @@ def word_ladder_len(start, end, dictionary):
                 tmp[i] = chr(97+j)
                 tmp = ''.join(tmp)
                 if tmp == end:
-                    return min_len+2
+                    #return min_len+2
+                    path_map[end] = path_map[s]+[s,end]
+                    return path_map[end]
                 if tmp in d and tmp not in visited:
                     q.append(tmp)
                     visited.add(tmp)
+                    path_map[tmp] = path_map[s]+[s]
                     n_next_level_words+=1
         if n_curr_level_words == 0:
             min_len+=1
             n_curr_level_words = n_next_level_words
             n_next_level_words =0 
-    return 0
+    return []
 
 if __name__=='__main__':
-    test_cases = [('hit','cog',['hot','dot','dog','lot','log'])]
+    test_cases = [('hit','log',['hot','dot','dog','lot','log'])]
     for each_test_case in test_cases:
         start, end, dictionary = each_test_case
-        print start,end,dictionary,word_ladder_len(start,end,dictionary)              
-                    
-                    
+        print start,end,dictionary,word_ladder_len(start,end,dictionary)                        
