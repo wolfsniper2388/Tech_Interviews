@@ -10,7 +10,7 @@ def strstr_1(orig_str, sub_str):
         return orig_str
     # i will only increase 1 after for loop no matter how i changes inside loop
     for i in range(len(orig_str)):
-        # if the length of the rest elements in orig_str is less than the lenght of sub_str
+        # if the length of the rest elements in orig_str is less than the length of sub_str
         # there is no match in the rest
         if len(orig_str) - i < len(sub_str):
             return -1
