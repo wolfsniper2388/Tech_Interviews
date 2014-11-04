@@ -52,6 +52,14 @@ def find_paths(x, y, landmines):
     return paths[(x,y)]
 
 
+def num_paths(A):
+    m = len(A)
+    n = len(A[0])
+    dp=[0]*n
+    if A[0][0] == 0:
+        return 0
+    
+    
 if __name__=='__main__':
     print robot_way(4,3)
     

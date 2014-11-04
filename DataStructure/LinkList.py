@@ -114,6 +114,21 @@ class LinkList(object):
             #self.add_node(p.data, 0)
             p=q
     
+    def reverse_list_recur(self):
+        if not self.head or not self.head.next:
+            return None
+        self.reverse_list_recur_helper(self.head.next)
+        
+    def reverse_list_recur_helper(self, p):
+        if not p.next:
+            return p
+        new_head = self.reverse_list_recur_helper(p.next)
+        p.next.next=p
+        p.next=None
+        self.head.next = new_head
+        return new_head
+    
+    
     def make_loop(self,pos):
         'Make the linked list a loop between pos and tail, pos starts from 0'
         if pos>len(self)-1:
@@ -183,7 +198,8 @@ if __name__ == '__main__':
         print d
     
     print 'Test reverse'
-    a.reverse_list()
+    a.print_list()
+    a.reverse_list_recur()
     a.print_list()
     
     print 'Test loop'

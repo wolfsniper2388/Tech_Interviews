@@ -39,8 +39,8 @@ def simplify_path(path):
     return ''.join(result_path)
 
 if __name__=='__main__':
-    test_cases = ['/home/', '/home//foo', '/work/./jas_feng//../../ws', '/../..', '/a/./b/../../c/', '/..']
-    for each_test_case in test_cases[-1:]:
+    test_cases = ['/home/', '/home//foo', '/work/./jas_feng//../../ws', '/../..', '/a/./b/../../c/', '/..', 'a/b/cd']
+    for each_test_case in test_cases:
         print each_test_case, simplify_path(each_test_case)
         
         
