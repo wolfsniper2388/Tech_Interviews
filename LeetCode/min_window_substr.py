@@ -2,8 +2,8 @@
     E.g.
         Input: S='ADOBECODEBANC', T= 'ABC'
         Output: 'BANC'
-        Input: 'acbbaca'
-        Output: 'aba'
+        Input: S='acbbaca' T = 'aba'
+        Output: 'baca'
     Notice: if there is no such window in S that covers all characters in T, return the empty string
     if there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S
     
@@ -63,7 +63,7 @@ def min_window_substr(S,T):
 
 if __name__=='__main__':
     test_cases = [('acbbaca','aba'),('ADOBECODEBANC','ABC'), ('abc','d'),('a','a')]
-    for each_test_case in test_cases[-1:]:
+    for each_test_case in test_cases:
         S,T= each_test_case
         print S,T,min_window_substr(S,T) 
                 

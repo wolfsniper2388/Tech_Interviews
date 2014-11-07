@@ -46,10 +46,12 @@ def find_factors(n):
     results = []
     curr_result = []
     num_map = {}
+    '''
     find_factors_helper(n,results, curr_result)
-    return results
+    return results'''
+    return find_factors_helper(n, num_map)
 
-
+'''
 def find_factors_helper(n, results, curr_result):
     for i in range(2, int(floor(sqrt(n)))+1):
         if n % i == 0:
@@ -61,7 +63,25 @@ def find_factors_helper(n, results, curr_result):
             curr_result.pop()
             find_factors_helper(n/i, results, curr_result)
             curr_result.pop()
-            
+'''
+def find_factors_helper(n, num_map):
+    if n<=3:
+        return [[n]]
+    if n in num_map:
+        #print 'hits', n, num_map[n]
+        return num_map[n]
+    num_map[n] = []
+    for i in range(2, int(floor(sqrt(n)))+1):
+        if n % i == 0:
+            prev_results = find_factors_helper(n/i, num_map)
+            prev_results_copy = deepcopy(prev_results)
+            prev_results_copy.append([n/i])
+            for j in range(len(prev_results_copy)):
+                prev_results_copy[j].append(i)
+                prev_results_copy[j] = sorted(prev_results_copy[j])
+                if prev_results_copy[j] not in num_map[n]:
+                    num_map[n].append(prev_results_copy[j])
+    return num_map[n]
 
 if __name__=='__main__':
     test_cases = [12,24,32,96]

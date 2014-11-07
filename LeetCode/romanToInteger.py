@@ -8,17 +8,13 @@
 def roman_to_int(s):
     roman_tuples=(('I', 1), ('V', 5), ('X', 10), ('L', 50), ('C', 100), ('D', 500), ('M', 1000))
     map=dict((x,y) for x,y in roman_tuples)
-    prev=None
-    ch=s[0]
-    num=map[ch]
-    i=1
-    while i<len(s):
-        prev=ch
-        ch=s[i]
-        num+=map[ch]
-        if map[prev]<map[ch]:
-            num-=2*map[prev]
-        i+=1
+    num = map[s[0]]
+    prev_ch = s[0]
+    for curr_ch  in s[1:]:
+        num += map[curr_ch]
+        if map[curr_ch] > map[prev_ch]:
+            num -= 2*map[prev_ch]
+        prev_ch = curr_ch
     return num
         
 if __name__=='__main__':

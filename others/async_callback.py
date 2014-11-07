@@ -10,21 +10,21 @@
 '''
 
 is_triggered = 0
+mutex = 1
 def register_cb(cb):
     q=deque([])
-    lock()
-    is_triggered = 0
+    wait(mutex)
     if is_triggered == 0:
         q.append(cb)
-        unlock()
+        signal(mutex)
     else:
-        unlock()
+        signal(mutex)
         cb()
 
 def trigger_event():
     is_triggered = 1
-    lock()
-    unlock()
+    wait(mutex)
+    signal(mutex)
     while q:
         q.popleft()
         cb()

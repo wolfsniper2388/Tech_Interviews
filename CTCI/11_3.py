@@ -34,14 +34,19 @@ def rotated_binary_search(A, target):
 def find_rotation_pivot(A):
     start=0;
     end=len(A)-1
-    # A[start] > A[end] means A[start:end] is not sorted ascendingly
-    while A[start]>A[end]:
+    pivot = end+1
+    # A[start] >= A[end] means A[start:end] is not sorted ascendingly
+    while A[start] >= A[end]:
         mid=start+(end-start)/2
-        if A[mid]>A[end]:
+        if A[mid] == A[start] == A[end]:
+            for i in range(start,end+1):
+                pivot = min(pivot, A[i])
+            return pivot
+        if A[mid]>=A[start]:
             start=mid+1
-        else:
+        else: 
             end=mid
-    return start
+    return A[start]
 
 
 if __name__=='__main__':

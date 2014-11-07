@@ -15,10 +15,10 @@ class Input_Type:
 def is_num(orig_str):
                         #     space    sign  digit  dot   exp
     transition_matrix = [[-1,    0  ,    3,    1,    2,   -1],  # state 0
-                         [-1,    8,     -1,    1,    4,    5],  # state 1
-                         [-1,   -1,     -1,    4,   -1,   -1],  # state 2
-                         [-1,   -1,     -1,    1,    2,   -1],  # state 3
-                         [-1,    8,     -1,    4,   -1,    5],  # state 4
+                         [-1,    8,     -1,    1,    4,    5],  # state 1    digit
+                         [-1,   -1,     -1,    4,   -1,   -1],  # state 2    .
+                         [-1,   -1,     -1,    1,    2,   -1],  # state 3    +/-
+                         [-1,    8,     -1,    4,   -1,    5],  # state 4    digit .
                          [-1,   -1,      6,    7,   -1,   -1],  # state 5
                          [-1,   -1,     -1,    7,   -1,   -1],  # state 6
                          [-1,    8,     -1,    7,   -1,   -1],  # state 7
@@ -44,7 +44,7 @@ def is_num(orig_str):
     return state in [1, 4, 7, 8] 
 
 if __name__=='__main__':
-    test_cases = ['+1-345.9.0', '1304ab.34', '-123.45', '124.7.90']
+    test_cases = ['+1-345.9.0', '1304ab.34', '-123.45', '124.7.90', '3.']
     for each_test_case in test_cases:
         print each_test_case, is_num(each_test_case)
         
