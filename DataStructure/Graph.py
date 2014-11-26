@@ -11,11 +11,13 @@ class GraphNode(object):
         return '%s(%r)' %(self.__class__.__name__, self.data)
 
 class Graph:
-    def __init__(self,vnumber):
+    def __init__(self,vnumber, indicator):
         self.vertex_num=vnumber
         self.edge_num=0
         self.vertex_list=[]
         self.edge_matrix=[[0 for i in range (self.vertex_num)] for j in range (self.vertex_num)]
+        assert(indicator == 'directed' or indicator == 'undirected')
+        self.indicator = indicator
             
     def __repr__(self):
         return '%s(%r)' %(self.__class__.__name__, self.vertex_list)
@@ -36,6 +38,8 @@ class Graph:
             print 'The edge already exists. Cannot add edge', (self.vertex_list[vertex1_index],self.vertex_list[vertex2_index],cost)
             return
         self.edge_matrix[vertex1_index][vertex2_index]=cost
+        if self.indicator == 'undirected':
+            self.edge_matrix[vertex2_index][vertex1_index]=cost
     
     def print_graph(self):
         pprint(self.edge_matrix)
@@ -59,13 +63,14 @@ class Graph:
         q=deque([])
         q.append(start_vertex_index)
         visited=set()
+        visited.add(start_vertex_index)
         while q:
             curr_index=q.popleft()
             print self.vertex_list[curr_index],
-            visited.add(curr_index)
             for next_index in self.get_neighbors_indices(curr_index):
             #for next_index in range(self.vertex_num):
                 if next_index not in visited:
+                    visited.add(next_index)
                     q.append(next_index)
             
     
@@ -92,7 +97,7 @@ if __name__=='__main__':
          |
          i
     '''
-    g=Graph(9)
+    g=Graph(9, 'undirected')
     for ch in ['a','b','c','d','a','f','g','h','i']:
         g.add_vertex(GraphNode(ch))
     g.add_edge(0,1,1)   # 'a'->'b'
@@ -116,3 +121,4 @@ if __name__=='__main__':
     print '\nTesting get_neighbors'
     for vertex_index in range(9):
         print vertex_index, g.get_neighbors_nodes(vertex_index)
+        print vertex_index, g.get_neighbors_indices(vertex_index)
