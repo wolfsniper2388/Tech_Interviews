@@ -7,10 +7,12 @@
     Your algorithm should use only constant space. 
     You may not modify the values in the list, only nodes itself can be changed.
 '''
-from LinkList import LinkList
+from LinkList import *
 
 def swap_nodes(my_list):
-    p = my_list.head
+    dummy = ListNode(0)
+    dummy.next = my_list.head
+    p = dummy
     while p.next and p.next.next:
         q=p.next
         r=q.next
@@ -20,10 +22,11 @@ def swap_nodes(my_list):
         q.next=r.next
         r.next=q
         p=q
+    my_list.head = dummy.next
     return my_list
 
 if __name__=='__main__':
-    test_cases=[[1,2,3,4,5,6], [1,2,3,4,5], [1,2,3,4], [1,2,3], [1,2], [1]]
+    test_cases=[[1,2,3,4,5,6], [1,2,3,4,5], [1,2,3,4], [1,2,3], [1,2], [1], []]
     for each_test_case in test_cases:
         curr_linkedlist = LinkList(each_test_case)
         swap_nodes(curr_linkedlist).print_list()

@@ -3,36 +3,37 @@
 
 '''
 
-from LinkList import LinkList
+from LinkList import *
 
 # iterative
 def merge_two_lists_1(listA, listB):
-    p = listA.head.next
-    q = listB.head.next
+    p = listA.head
+    q = listB.head
     if not p:
         return listB
     if not q:
         return listA 
     result_list = LinkList()
-    r = result_list.head
+    #tail = ListNode(0)
+    #tail.next = result_list.head
     while p and q:
         if p.data < q.data:
-            result_list.append_node(p.data)
+            result_list.append_node(ListNode(p.data))
             p = p.next
         else:
-            result_list.append_node(q.data)
+            result_list.append_node(ListNode(q.data))
             q = q.next
-        r = r.next
+        
     if p:
-        r.next = p
+        result_list.append_node(p)
     if q:
-        r.next = q
+        result_list.append_node(q)
     return result_list
 
 # recursive
 def merge_two_lists_2(list_1, list_2):
     result = LinkList()
-    result.head.next = merge_two_lists_helper(list_1.head.next, list_2.head.next)
+    result.head = merge_two_lists_helper(list_1.head, list_2.head)
     return result
     
 def merge_two_lists_helper(head_1, head_2):

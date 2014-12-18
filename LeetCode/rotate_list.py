@@ -3,13 +3,12 @@
     Input: 1->2->3->4->5->NULL, k = 2,
     Output: 4->5->1->2->3->NULL.
 '''
-from LinkList import LinkList
+from LinkList import *
 
 def rotate_list(orig_list, k):
     if k==0:
         return orig_list
-    p = orig_list.head
-    q = orig_list.head
+    p = q = orig_list.head
     # i = 0,1,...k-1
     for i in range(k):
         p = p.next
@@ -22,8 +21,8 @@ def rotate_list(orig_list, k):
     ''' till now, p points to the last element in list
         and q points to the last k+1 element
     '''
-    p.next = orig_list.head.next
-    orig_list.head.next = q.next
+    p.next = orig_list.head
+    orig_list.head = q.next
     q.next = None
     return orig_list
 

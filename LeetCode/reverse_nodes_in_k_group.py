@@ -8,12 +8,14 @@
         Input: 1->2->3->4->5, k=3
         Output: 3->2->1->4->5
 '''
-from LinkList import LinkList
+from LinkList import *
 
 def reverse_nodes_in_k_group(my_list, k):
     i=0
-    h = my_list.head.next
-    new_head = my_list.head
+    dummy = ListNode(0)
+    dummy.next = my_list.head
+    h = my_list.head
+    new_head = dummy
     while h:
         i+=1
         if i % k == 0:
@@ -21,6 +23,7 @@ def reverse_nodes_in_k_group(my_list, k):
             h = new_head.next
         else:
             h = h.next
+    my_list.head = dummy.next
     return my_list
 
 def reverse(new_head, k):

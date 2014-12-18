@@ -2,17 +2,17 @@
 '''
 
 from Heap import Heap
-from LinkList import LinkList
+from LinkList import *
 import sys
 
 def merge_lists(lists):
     ''' merge len(lists) sorted linked lists, and return the result linked list
     '''
     for each_list in lists:        
-        each_list.append_node(sys.maxint)
+        each_list.append_node(ListNode(sys.maxint))
     min_heap = Heap()
     result_list = LinkList()
-    curr_nodes = [each_list.head.next for each_list in lists]
+    curr_nodes = [each_list.head for each_list in lists]
     curr_datas = [node.data for node in curr_nodes]
     # build the heap according to curr_datas
     min_heap.build_heap('min', curr_datas)
@@ -21,7 +21,7 @@ def merge_lists(lists):
         # extract min node
         curr_min = min_heap.extract_node()
         # append to result
-        result_list.append_node(curr_min)
+        result_list.append_node(ListNode(curr_min))
         min_index = curr_datas.index(curr_min)
         curr_nodes[min_index] = curr_nodes[min_index].next
         curr_datas[min_index] = curr_nodes[min_index].data

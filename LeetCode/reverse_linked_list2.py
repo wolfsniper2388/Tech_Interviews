@@ -7,10 +7,13 @@
     1 <= m <= n <= length of list.
 '''
 
-from LinkList import LinkList
+from LinkList import *
 
 def reverse_linked_list(orig_list, m, n):
-    p = orig_list.head
+    assert(1 <= m <= n <= len(orig_list))
+    dummy = ListNode(0)
+    dummy.next = orig_list.head
+    p = dummy
     count = n-m
     while m-1 > 0:
         p = p.next
@@ -21,7 +24,8 @@ def reverse_linked_list(orig_list, m, n):
         q.next = r.next
         r.next = p.next
         p.next = r
-        count-=1
+        count -= 1
+    orig_list.head = dummy.next
     return orig_list
 
 if __name__=='__main__':

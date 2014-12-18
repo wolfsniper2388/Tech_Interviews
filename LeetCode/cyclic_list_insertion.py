@@ -45,17 +45,16 @@ def insert_node_cyclic(orig_list, node, val):
     
 if __name__=='__main__':
     orig_list = LinkList([1,3,3,4])
-    head = orig_list.head
-    p=q=head.next
-    while p.next:
-        p = p.next
-    p.next = q
-    node = q.next.next
+    p = q = orig_list.head
+    orig_list.make_loop(0)
+    node = q.next.next      # node = second 3
+    print orig_list.loop_length()
     for val in [2,3,5]:
         insert_node_cyclic(orig_list, node, val)
-        p=q=orig_list.head.next
-        p=p.next
+        p = q = orig_list.head
+        print p.data,
+        p = p.next
         while p!=q:
             print p.data,
-            p=p.next
+            p = p.next
         print
