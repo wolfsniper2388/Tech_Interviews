@@ -3,12 +3,11 @@
     Return a deep copy of the list.
 '''
 
-class ListNode(object):
+class RandomListNode(object):
     def __init__(self,data):
         self.data = data
         self.next = None
         self.random = None
-    
     
 ''' Three steps:
         1. copy the node and insert the copy node between orig_node and orig_node->next
@@ -16,21 +15,20 @@ class ListNode(object):
         3. partition the list
 '''
 def copy_list(orig_list):
-    head = orig_list.head
-    if not head:
-        return None
-    p = head.next
+    p = orig_list.head
+    if not p:
+        return
     # step 1
     while p:
         # copy the node
-        copy = ListNode(p.data)
+        copy = RandomListNode(p.data)
         # insert
         copy.next = p.next
         p.next = copy
         p = copy.next
     
     # step 2
-    p = head.next
+    p = orig_list.head
     while p:
         if p.random:
             copy = p.next
@@ -41,8 +39,9 @@ def copy_list(orig_list):
         p = p.next.next
     
     # step 3:
-    new_head = ListNode(0)
-    new_head.next = head.next.next
+    
+    new_head = orig_list.head.next
+    copy = new_head
     while p:
         # partition
         copy = p.next
@@ -51,3 +50,8 @@ def copy_list(orig_list):
             copy.next = copy.next.next
         # else copy.next = None, which is default
         p = p.next
+    new_list = LinkList()
+    new_list.head = new_head
+    return new_list
+
+    

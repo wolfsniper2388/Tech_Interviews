@@ -2,35 +2,37 @@
 '''
 
 
-from LinkList import LinkList
+from LinkList import *
 
 ''' push the node from start to middle to the stack
     compare the nodes from middle to the end to the top node of the stack one by one 
     until the stack is empty
  '''
 def isPalindrome_1(alist):
-    slow=alist.head
-    fast=alist.head
+    dummy = ListNode(0)
+    dummy.next = alist.head
+    slow = dummy
+    fast = dummy
     if not slow.next:
         return False
-    node_stack=[]
+    node_stack = []
     while fast and fast.next:
-        slow=slow.next
-        fast=fast.next.next
+        slow = slow.next
+        fast = fast.next.next
         node_stack.append(slow)
     if not fast:
         node_stack.pop()
-    slow=slow.next
+    slow = slow.next
     while node_stack:
-        if slow.data!=node_stack.pop().data:
+        if slow.data != node_stack.pop().data:
             return False
-        slow=slow.next
+        slow = slow.next
     return True
 
 
 
 def isPalindrome_2(alist):
-    return isPalindrome_2_helper(alist.head.next, len(alist))[0]
+    return isPalindrome_2_helper(alist.head, len(alist))[0]
 
 
 ''' 3->1->2->5->2->1->3   compare 3f to 3b(return value) if equal, return (True, None)   first_node=3f, length=7

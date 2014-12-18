@@ -7,45 +7,44 @@
         Output: 8->6->5->3: that is 3568
 '''
 
-from LinkList import LinkList
+from LinkList import *
 
 def add_lists_reverse(list1, list2):
     ''' add two lists in reverse order
     '''
     
-    head1 = list1.head
-    head2 = list2.head
-    p = head1.next
-    q = head2.next
+    p = list1.head
+    q = list2.head
+    
     carry = 0
     sum_list = LinkList()
     
     while p and q:
         curr_sum_digit = (p.data+q.data+carry) % 10
         carry = (p.data+q.data+carry) / 10
-        sum_list.append_node(curr_sum_digit)
+        sum_list.append_node(ListNode(curr_sum_digit))
         p=p.next
         q=q.next
     while q:
         curr_sum_digit = (q.data+carry) % 10
         carry = (q.data+carry) / 10
-        sum_list.append_node(curr_sum_digit)
+        sum_list.append_node(ListNode(curr_sum_digit))
         q=q.next
     while p:
         curr_sum_digit = (p.data+carry) % 10
         carry = (p.data+carry) / 10
-        sum_list.append_node(curr_sum_digit)
+        sum_list.append_node(ListNode(curr_sum_digit))
         p=p.next
     if carry == 1:
-        sum_list.append_node(1)
+        sum_list.append_node(ListNode(1))
                 
     return sum_list
 
 
 def add_two_lists(list1, list2):
     sum_list = LinkList()
-    p = list1.head.next
-    q = list2.head.next
+    p = list1.head
+    q = list2.head
     carry = 0
     while p or q:
         first = p.data if p else 0
@@ -53,13 +52,13 @@ def add_two_lists(list1, list2):
         sum = first+second+carry
         carry = sum/10
         sum = sum%10
-        sum_list.append_node(sum)
+        sum_list.append_node(ListNode(sum))
         if p:
             p=p.next
         if q:
             q=q.next
     if carry:
-        sum_list.append_node(carry)
+        sum_list.append_node(ListNode(carry))
     return sum_list
 
 if __name__=='__main__':
