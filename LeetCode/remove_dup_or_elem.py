@@ -55,12 +55,12 @@ def remove_dup_in_array_q2(A):
     return A[:i+1]
 
 
-from LinkList import LinkList
+from LinkList import *
 
 def remove_dup_in_list_q1(my_list):
     ''' remove duplicates in linked list so that each element occur only once 
     '''
-    p = my_list.head.next
+    p = my_list.head
     q = p.next
     while q:
         if p.data == q.data:
@@ -75,9 +75,11 @@ def remove_dup_in_list_q1(my_list):
 def remove_dup_in_list_q2(my_list):
     ''' remove all nodes with duplicates, leaving only distinctive elements
     '''
-    if not my_list.head.next:
+    if not my_list.head:
         return None
-    p = my_list.head
+    dummy = ListNode(0)
+    dummy.next = my_list.head
+    p = dummy
     q = p.next.next
     del_flag = False
     while q:

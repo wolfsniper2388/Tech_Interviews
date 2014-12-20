@@ -3,7 +3,7 @@
     print the sequence of gray code. A gray code sequence must begin with 0.
     E.g.
         Input: 3
-        Output: ['000','001','011','010', '110', '111', '101', '100']
+        Output: [0, 1, 3, 2, 6, 7, 5, 4]
 '''
 
 
@@ -20,6 +20,14 @@ def grey_code(n):
     return curr_result
 
 
+def grey_code_2(n):
+    prev = [0]
+    for i in range(n):
+        prev_len = len(prev)
+        for j in range(prev_len-1, -1 , -1):
+            prev.append((1<<i) + prev[j])
+    return prev
+
 if __name__=='__main__':
     for n in range(1,5):
-        print n, grey_code(n)
+        print n, grey_code_2(n)

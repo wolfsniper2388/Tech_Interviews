@@ -1,7 +1,8 @@
-''' Roatate a matrix by 90 degrees clockwise in place
+''' Rotate a matrix by 90 degrees clockwise in place
 '''
 
-def rotate_matrix (matrix, N):
+def rotate_matrix (matrix):
+    N = len(matrix)
     # start from the outside most layer and move inward
     # i.e. start from layer 0 to layer N/2-1
     for layer in range(N/2):
@@ -22,9 +23,10 @@ def rotate_matrix (matrix, N):
             matrix[end][end-offset]=matrix[i][end]
             # top -> right
             matrix[i][end]=top
+    return matrix
     
 if __name__=='__main__':
     matrix=[[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
     print matrix
-    rotate_matrix(matrix, 4)
-    print matrix
+    print rotate_matrix(matrix)
+    
