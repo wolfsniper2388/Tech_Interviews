@@ -40,11 +40,12 @@ def is_match(string, pattern, s_index, p_index):
     if pattern[p_index+1] != '*':
         # (string[s_index]==pattern[p_index]) or (pattern[p_index]=='.' and string) means string and pattern can match at current
         # s_index and p_index
-        return (string[s_index]==pattern[p_index] or (pattern[p_index]=='.' and string)) and is_match(string, pattern, s_index+1, p_index+1)
+        return (((s_index < len(string) and (string[s_index]==pattern[p_index] or pattern[p_index]=='.'))) 
+            and is_match(string, pattern, s_index+1, p_index+1))
     
     # if next pattern == '*'
     # while string and pattern can match at current s_index and p_index
-    while (s_index < len(string)) and ((string[s_index]==pattern[p_index]) or (pattern[p_index]=='.' and string)):
+    while (s_index < len(string)) and ((string[s_index]==pattern[p_index]) or (pattern[p_index]=='.')):
         # if pattern[p_index+2:] can match string then return True
         # e.g. string = 'abc' pattern = 'a*bc'
         if is_match(string, pattern, s_index, p_index+2):
@@ -56,7 +57,7 @@ def is_match(string, pattern, s_index, p_index):
 
 if __name__=='__main__':
     test_cases=[('abc', 'abc'), ('abcd', '.*'), ('abcbcd', 'a.*c.*d'), ('abcbcd', 'a*c.*d'), ('a', 'aa'),
-                ('aa', 'a'), ('a', ''), ('', 'a'), ('', 'a*')]
+                ('aa', 'a'), ('a', ''), ('', 'a'), ('', 'a*'), ('a', '.*..a'), ('aaaaaaaaaaaaab', 'a*a*a*a*a*a*a*a*a*a*c')]
     for each_test_case in test_cases:
         string,pattern=each_test_case
         print each_test_case, regex_match(string, pattern)
