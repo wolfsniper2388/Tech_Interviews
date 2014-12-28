@@ -31,15 +31,15 @@ class BinaryTree(object):
             return 
         
     def create_tree_pre_in(self, pre_order, in_order):
-        if len(pre_order)==0:
+        if not pre_order:
             return None
         n=TreeNode(pre_order[0])
         pos=in_order.index(pre_order[0])
         n.left=self.create_tree_pre_in(pre_order[1:pos+1],in_order[:pos])
-        if n.left!=None:
+        if n.left:
             n.left.parent=n
         n.right=self.create_tree_pre_in(pre_order[pos+1:], in_order[pos+1:])
-        if n.right!=None:
+        if n.right:
             n.right.parent=n
         self.root=n
         return n
