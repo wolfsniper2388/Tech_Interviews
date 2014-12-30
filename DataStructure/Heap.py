@@ -21,9 +21,7 @@ class Heap(object):
          @param seq:        sequence
     '''
     def build_heap(self, indicator, seq):
-        if indicator!='min' and indicator!='max':
-            print 'indicator must be min or max'
-            raise NameError
+        assert indicator == 'max' or indicator == 'min'
         # whenever user called build_heap, remember the user choice of indicator
         self.indicator=indicator
         #deepcopy will seperate seq from self.heap, else they will be the same all the time
