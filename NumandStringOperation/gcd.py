@@ -1,4 +1,4 @@
-''' calculate the greatest common dividor and least common multiple of a and b
+''' calculate the greatest common divider and least common multiple of a and b
 '''
 
 def gcd(a,b):
