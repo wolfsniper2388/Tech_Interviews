@@ -60,14 +60,14 @@ def insert_intervals(orig_intervals, target_interval):
         elif curr_interval.start > target_interval.end:
             result.append(target_interval)
             break
-            #target_interval = curr_interval
         else:
             target_interval = Interval(min(curr_interval.start, target_interval.start), max(curr_interval.end, target_interval.end))
+    # if i is already at end, append the target_interval and return
     if i == len(orig_intervals):
         result.append(target_interval)
         return result
+    # else append everything else after index i , and return
     result.extend(orig_intervals[i:])
-    #result.append(target_interval)
     return result
     
     
