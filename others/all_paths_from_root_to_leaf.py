@@ -1,4 +1,4 @@
-''' Given a binary tree, get all the paths frrom root to leaf
+''' Given a binary tree, get all the paths from root to leaf
 '''
 
 from BinaryTree import BinaryTree

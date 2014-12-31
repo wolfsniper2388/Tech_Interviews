@@ -16,19 +16,6 @@ class BinarySearchTree(BinaryTree):
         return n
     
     def add_node(self, val):
-        ''' The reason to use helper function here is that we want to set the root and 
-            don't want this operation to be in the recursion.
-            So pull out all the operations that we don't want to be in the recursion, and then
-            call the recursion function which is a helper function here
-            
-            Another reason to use helper function is that user may have no access to the 
-            private data like root here, so when they make the call they cannot pass in root as 
-            a parameter, however the function call must use root as a parameter. In this situation,
-            we can have a interface function which takes the user's parameter and call the helper function inside
-            the interface function to pass the private data as parameters. E.g, the add_node(val) is a interface
-            function which takes the parameter 'val' from user, but to implement add_node, we must know
-            the root of the tree, so call add_node_helper function to actually pass the root parameter
-        '''
         if self.root==None:
             self.root=TreeNode(val)
         else:
@@ -36,10 +23,10 @@ class BinarySearchTree(BinaryTree):
             
     def add_node_helper(self, node, val):
         if val<node.data:
-            #if right subtree is not None, go to right subtree
+            #if left subtree is not None, go to right subtree
             if node.left:
                 self.add_node_helper(node.left,val)
-            #if right subtree is None, then found the place to insert
+            #if left subtree is None, then found the place to insert
             else:
                 new_node=TreeNode(val)
                 node.left=new_node
@@ -66,44 +53,34 @@ class BinarySearchTree(BinaryTree):
             return self.find_node(node.right, val)
         else:
             return node
-    # !!!!! Very Important !!!!!!
-    def del_node(self,node,val):
-        # delete the root and root has only left/right subtree
-        if node==self.root and not node.left:
-            self.root=node.right
-            del node
-            return self.root    
-        elif node==self.root and not node.right:
-            self.root=node.left
-            del node
-            return self.root
-    
-    
-        if node==None:
-            print 'Element not found'
-        elif val<node.data:
-            node.left=self.del_node(node.left, val)     #whatever happened down there, just give me the root of my left subtree
-        elif val>node.data:
-            node.right=self.del_node(node.right, val)       #whatever happened down there, just give me the root of my right subtree
-        # val==node.data, found the node to be deleted
-        elif node.right and node.left:
-            min_node=self.find_min(node.right)      #find the node with min data in the right subtree
-            node.data=min_node.data
-            node.right=self.del_node(node.right, min_node.data)     #whatever happened down there, just give me the root of my right subtree
-        else:
-            # left subtree is None
-            if not node.left:
-                tmp_node=node
-                node=node.right     #the root of the left/right subtree of my parent is my right child
-                del tmp_node
-            # right subtree is None
-            elif not node.right:
-                tmp_node=node
-                node=node.left      #the root of the left/right subtree of my parent is my left child
-                del tmp_node
-        return node
         
-    def del_nodeNR(self,val):
+    def del_node(self, r, node):
+        if not r:
+            raise KeyError
+        if node.data < r.data:
+            r.left = self.del_node(r.left, node)
+        elif node.data > r.data:
+            r.right = self.del_node(r.right, node)
+        # found the node to be deleted, node ==  r now
+        else:
+            # if it's leaf
+            if not r.left and not r.right:
+                return None
+            # if only has left subtree
+            elif not r.left:
+                return r.right
+            # if only has right subtree
+            elif not r.right:
+                return r.left
+            # if has both left and right subtrees
+            else:
+                right_min_node = self.find_min(r.right)
+                r.data = right_min_node.data
+                # del right_min_node will not work because del simply remove the right_min_node's reference, the true object is still there
+                r.right = self.del_node(r.right, right_min_node)
+        return r
+        
+    def del_node_with_parent(self,val):
         node=self.find_node(self.root,val)
         if node==None:
             print 'did not find the node with data of ',val
@@ -173,29 +150,31 @@ if __name__=='__main__':
     
     '''
     a=[20,10,40,3,17,35,73,1,7,15,18,89,2,5,11,4,6,12]
-    b=[20,30,40]
     for key in a:
         t.add_node(key)
     r=t.root
     print t.level_order_print(r)
     print t.find_node(r, 3)
     print 'root is ',t.root
-    '''
-    t.del_nodeNR(10)
-    print 'Test delete NR, pre order print'
-    t.pre_order_print(r)
-    print '\nTest delete NR, in order print'
-    t.in_order_print(r)
-    print '\n root is', t.root
-    '''
-    t.del_node(r,73)
+
+    # delete node 40
+    print 'New Root: ', t.del_node(r, r.right)
     print 'Test delete, pre order print'
     t.pre_order_print(t.root)
     print '\nTest delete, in order print'
     t.in_order_print(t.root)
     print '\n root is', t.root
     
-    print 'Testing creating tree with recursion CTCI 4_3'
+    
+    # delete node 20
+    t.del_node_with_parent(20)
+    print 'Test delete with parent, pre order print'
+    t.pre_order_print(t.root)
+    print '\nTest delete with parent, in order print'
+    t.in_order_print(t.root)
+    print '\n root is', t.root
+    
+    print 'Testing creating binary search tree using sorted array'
     t=BinarySearchTree()
     t.create_tree(range(1,11))
     print t.root
