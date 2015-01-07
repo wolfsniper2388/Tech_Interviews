@@ -25,20 +25,29 @@
 
 from copy import deepcopy
 
+def combo_sum_q1(A, target):
+    results = []
+    curr_result = []
+    combo_sum_q1_helper(A, target, results, curr_result, 0)
+    return results
+
 def combo_sum_q1_helper(A, target, results, curr_result, curr_index):
     if target < 0:
         return
     if target == 0:
         results.append(deepcopy(curr_result))
-        return results
+        return
     for i in range(curr_index, len(A)):
         curr_result.append(A[i])
         combo_sum_q1_helper(A, target - A[i], results, curr_result, i)
         curr_result.pop()
-    return results
+    return
 
 
-''' suppose A=[1, 2,3,5,7] target =10
+
+
+''' Q2
+    suppose A=[1, 2,3,5,7] target =10
     one recursion tree path is:
                         10, 7
                     /         \
@@ -51,20 +60,6 @@ def combo_sum_q1_helper(A, target, results, curr_result, curr_index):
                     1,1  3,1
                        
 '''          
-def combo_sum_q2_helper(A, target, results, curr_result, i):
-    if target<=0 or i==-1:
-        return None
-    
-    if target == A[i]:
-        curr_result.append(A[i])
-        if sorted(curr_result) not in results:
-            results.append(deepcopy(sorted(curr_result)))
-        curr_result.pop()
-
-    curr_result.append(A[i])
-    combo_sum_q2_helper(A, target-A[i], results, curr_result, i-1)
-    curr_result.pop()
-    combo_sum_q2_helper(A, target, results, curr_result, i-1)
 
 def combo_sum_q2(A, target):
     curr_result=[]
@@ -72,12 +67,31 @@ def combo_sum_q2(A, target):
     combo_sum_q2_helper(A, target, results, curr_result, len(A)-1)
     return results
 
+def combo_sum_q2_helper(A, target, results, curr_result, i):
+    #if target<=0 or i==-1:
+    #    return
+    if i == -1:
+        return
+    
+    if target == 0:
+        #curr_result.append(A[i])
+        if sorted(curr_result) not in results:
+            results.append(deepcopy(sorted(curr_result)))
+        #curr_result.pop()
+
+    curr_result.append(A[i])
+    combo_sum_q2_helper(A, target-A[i], results, curr_result, i-1)
+    curr_result.pop()
+    combo_sum_q2_helper(A, target, results, curr_result, i-1)
+    curr_result.pop()
+
+
 if __name__=='__main__':
     print 'Q1'
     test_cases = [([2,3,5,6],10), ([7,3,5],10),([2],1), ([7,3,2],18)]
     for each_test_case in test_cases:
         A, target = each_test_case    
-        print A, target, combo_sum_q1_helper(A, target, [], [], 0)
+        print A, target, combo_sum_q1(A, target)
     print 'Q2'
     test_cases = [([1,1,2,5,6,7,10],8), ([10,1,2,7,6,1,5], 8),([7,3,2,6,5],10), ([2],1), ([3],3)]
     for each_test_case in test_cases:
