@@ -19,7 +19,10 @@ class BinaryTree(object):
     
     def __repr__(self):
         return '%s(%r)' %(self.__class__.__name__, self.root)
-        
+    
+    def clone_tree(self, r):
+        self.root = r
+    
     #use pre_order and in_order sequence to recursively create the binary tree
     def create_tree(self,seq1, seq2, indicator='pre_in'):
         if indicator == 'pre_in':

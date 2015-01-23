@@ -24,16 +24,16 @@ def subsets(S):
     dfs(S, results, curr_result, 0)
     return results
     
-def dfs(S,results,curr_result,i):
-    j = i
-    while j < len(S):
-        curr_result.append(S[j])
+def dfs(S,results,curr_result,curr_idx):
+    i = curr_idx
+    while i < len(S):
+        curr_result.append(S[i])
         results.append(deepcopy(curr_result))
-        dfs(S,results, curr_result, j+1)
+        dfs(S,results, curr_result, i+1)
         curr_result.pop()
-        while (j<len(S)-1 and S[j] == S[j+1]):
-           j+=1
-        j+=1
+        while (i < len(S)-1 and S[i] == S[i+1]):
+           i+=1
+        i+=1
            
 
 if __name__=='__main__':
