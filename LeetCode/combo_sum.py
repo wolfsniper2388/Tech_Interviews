@@ -21,6 +21,15 @@
     E.g 
         Input: [1,1,2,5,6,7], target=8
         Output: [[1,7], [1,2,5], [2,6], [1,1,6]
+        
+    Q.3
+    
+    Q.4
+    
+    
+    
+    
+    
 '''
 
 from copy import deepcopy
@@ -85,8 +94,35 @@ def combo_sum_q2_helper(A, target, results, curr_result, i):
     combo_sum_q2_helper(A, target, results, curr_result, i-1)
     curr_result.pop()
 
+def combinationSum3(n,k):
+        """
+        :type k: int
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        curr = []
+        results = []
+        dfs(n, k, curr, results, 1)
+        return results
+def dfs(n, k, curr, results, start):
+    if k == 1:
+        if n < 10:    
+            curr.append(n)
+            results.append(deepcopy(curr))
+            curr.pop()
+        return
+    #a0 + a0+1 + a0+2 + ... + a0+k-1 <= n
+    # a0 <= (n - k*(k-1)/2) / k
+    end = (n - k*(k-1)/2) / k
+    for i in range(start,end+1 if k > 2 else (n+1)/2):
+        if i < 10:
+            curr.append(i)
+            dfs(n-i, k-1, curr, results, i+1)
+            curr.pop()
+
 
 if __name__=='__main__':
+    '''
     print 'Q1'
     test_cases = [([2,3,5,6],10), ([7,3,5],10),([2],1), ([7,3,2],18)]
     for each_test_case in test_cases:
@@ -97,4 +133,9 @@ if __name__=='__main__':
     for each_test_case in test_cases:
         A, target = each_test_case
         print A, target, combo_sum_q2(A, target)
+    '''    
+    print 'Q3'
+    test_cases = [(15,5),(6,2), (9,3)]
+    for n,k in test_cases:
+        print n,k, combinationSum3(n,k)
     
