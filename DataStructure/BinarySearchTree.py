@@ -66,12 +66,16 @@ class BinarySearchTree(BinaryTree):
             # if it's leaf
             if not r.left and not r.right:
                 return None
-            # if only has left subtree
-            elif not r.left:
-                return r.right
             # if only has right subtree
+            elif not r.left:
+                ret = r.right
+                del r
+                return ret
+            # if only has left subtree
             elif not r.right:
-                return r.left
+                ret = r.left
+                del r
+                return ret
             # if has both left and right subtrees
             else:
                 right_min_node = self.find_min(r.right)

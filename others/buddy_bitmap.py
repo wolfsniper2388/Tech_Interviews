@@ -43,6 +43,7 @@ def set_bit(A, pos, length):
         setbit_down(A,x,n)
         # set ancestors
         while x>0:
+            # make sure its sibling is 1, if its sibling is 0, cannot set ancestors
             if (x%2==0 and A[x-1]==1) or (x%2==1 and x<n and A[x+1]==1):
                 A[(x-1)/2] = 1
             x = (x-1)/2
