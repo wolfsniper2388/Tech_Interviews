@@ -16,7 +16,7 @@ class RadixTree():
     
     def deserialize(self, sentences):
         sentences_list = [each_sentence.split() for each_sentence in sentences]
-        print sentences_list
+        #print sentences_list
         for each_sentence_list in sentences_list:
             self.insert(each_sentence_list)
         self.updateSubpathsNum(self.root)
@@ -73,13 +73,11 @@ class RadixTree():
                 self.dfsPrintSubpathsNum_helper(child, visited)
         
     
-    def matchNum(self, query):
+    def matchNum(self, query_words):
         '''
         return the number of query prefix matches
         '''
-        query_words = query.split()
-        if not query_words:
-            return 0
+        
         matches = 0
         curr_node = self.root
         n_words = len(query_words)
