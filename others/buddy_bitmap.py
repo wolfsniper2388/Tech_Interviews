@@ -19,15 +19,15 @@
         
 '''
 
-def setbit_down(A, x, n):
-    if x>=n:
+def setbit_down(A, pos, length):
+    if pos>=length:
         return
-    if 2*x+1<=n and A[2*x+1]==0:
-        A[2*x+1]=1
-        setbit_down(A,2*x+1,n)
-    if 2*x+2<=n and A[2*x+2]==0:
-        A[2*x+2]=1
-        setbit_down(A,2*x+2,n)
+    if 2*pos+1<=length and A[2*pos+1]==0:
+        A[2*pos+1]=1
+        setbit_down(A,2*pos+1,length)
+    if 2*pos+2<=length and A[2*pos+2]==0:
+        A[2*pos+2]=1
+        setbit_down(A,2*pos+2,length)
     
 
 def set_bit(A, pos, length):
